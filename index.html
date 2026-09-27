@@ -256,6 +256,25 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
 .sum span:nth-child(odd){color:var(--mute)}
 .sum .tot{font-family:var(--cond);font-weight:800;font-size:26px;color:var(--ink);padding-top:10px;border-top:1px solid var(--rule)}
 .sum .tot:last-child{color:var(--red-hot)}
+.dstep{display:flex;flex-direction:column;flex:1;min-height:0;gap:0}
+#stepForm{overflow:auto;gap:12px;padding-top:14px}
+#stepForm h3{font-size:24px}
+.f{display:grid;gap:5px;border:0;padding:0;margin:0;min-width:0}
+.f label,.f legend{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);padding:0}
+.f input,.f textarea{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--rule);padding:10px 12px;font:inherit;font-size:16px}
+.f input:focus,.f textarea:focus{border-color:var(--red);outline:none}
+.f2{display:grid;grid-template-columns:110px 1fr;gap:10px}
+.opt{justify-content:flex-start;display:flex!important;gap:10px;align-items:center;font-family:var(--body)!important;font-size:15px!important;letter-spacing:0!important;text-transform:none!important;color:var(--ink)!important;border:1px solid var(--rule);padding:10px 12px;cursor:pointer;margin-top:6px}
+.opt:has(input:checked){border-color:var(--red)}
+.opt input{accent-color:var(--red);width:auto!important;flex:0 0 auto;margin:0}
+.hp{position:absolute!important;left:-9999px!important;width:1px;height:1px}
+.back{all:unset;cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--mute);letter-spacing:.08em}
+.back:hover{color:var(--ink)}
+.pay-note{font-size:13px;color:var(--mute);margin:0;line-height:1.45}
+.done{align-items:center;justify-content:center;text-align:center;gap:16px}
+.done img{width:160px;filter:drop-shadow(0 0 14px rgba(212,20,42,.5))}
+.done p{color:var(--mute);max-width:32ch}
+.done b{color:var(--ink)}
 .msg{font-family:var(--mono);font-size:12px;line-height:1.6;margin-top:12px;color:var(--mute)}
 .msg.err{color:var(--red-hot)}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--red);color:#fff;font-family:var(--cond);font-weight:800;font-size:18px;letter-spacing:.1em;text-transform:uppercase;padding:12px 22px;z-index:95;box-shadow:0 0 40px rgba(212,20,42,.7)}
@@ -381,7 +400,7 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
           <span class="eyebrow">Offisiell merch</span>
           <h2>Tyranny <em>reigns</em><br>upon you</h2>
         </div>
-        <p>Ny merch er her, laget sammen med EP Merch. Vi sender fra Larvik – 99 kr frakt i Norden. Betal med kort, Apple Pay eller Google Pay.</p>
+        <p>Ny merch er her, laget sammen med EP Merch. Bestill her, så får du betalingsinfo på e-post. Vi sender fra Larvik for 99 kr, eller du henter på konsert.</p>
       </div>
       <div class="grid" id="grid"></div>
       <p class="dm">Vil du heller hente på konsert? Send DM på Instagram.</p>
@@ -439,9 +458,38 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-label="Handlekurv">
   <header><h3>Handlekurv</h3><button class="x" id="closeCart" type="button">Lukk ✕</button></header>
-  <ul class="lines" id="lines"></ul>
-  <div class="sum" id="sum"></div>
-  <button class="btn" id="checkout" type="button">Gå til betaling</button>
+  <div class="dstep" id="stepCart">
+    <ul class="lines" id="lines"></ul>
+    <div class="sum" id="sum"></div>
+    <button class="btn" id="checkout" type="button">Gå til bestilling</button>
+  </div>
+  <form class="dstep" id="stepForm" hidden novalidate>
+    <button class="back" type="button" id="backCart">← Tilbake til kurven</button>
+    <h3>Dine opplysninger</h3>
+    <div class="f"><label for="oName">Navn</label><input id="oName" autocomplete="name" required></div>
+    <div class="f"><label for="oEmail">E-post</label><input id="oEmail" type="email" autocomplete="email" required></div>
+    <div class="f"><label for="oPhone">Telefon</label><input id="oPhone" type="tel" autocomplete="tel" required></div>
+    <fieldset class="f"><legend>Levering</legend>
+      <label class="opt"><input type="radio" name="delivery" id="dPost" value="post" checked> Send med posten <span id="shipPrice"></span></label>
+      <label class="opt"><input type="radio" name="delivery" id="dPick" value="pickup"> Hent på konsert (gratis)</label>
+    </fieldset>
+    <div id="addrWrap">
+      <div class="f"><label for="oAddr">Adresse</label><input id="oAddr" autocomplete="street-address"></div>
+      <div class="f2"><div class="f"><label for="oZip">Postnr.</label><input id="oZip" inputmode="numeric" autocomplete="postal-code" maxlength="10"></div>
+      <div class="f"><label for="oCity">Sted</label><input id="oCity" autocomplete="address-level2"></div></div>
+    </div>
+    <div class="f"><label for="oNote">Melding (valgfritt)</label><textarea id="oNote" rows="2"></textarea></div>
+    <input type="text" id="oWeb" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+    <div class="sum" id="sum2"></div>
+    <p class="pay-note">Du betaler ikke nå. Bestillingen sendes til Tyranny, og du får betalingsinformasjon på e-post.</p>
+    <button class="btn" id="sendOrder" type="submit">Send bestilling</button>
+  </form>
+  <div class="dstep done" id="stepDone" hidden>
+    <img src="img/logo-600.png" alt="">
+    <h3>Takk for bestillingen!</h3>
+    <p>Ordrenummer <b id="doneNo"></b>. Du får en bekreftelse på e-post, og vi tar kontakt med betalingsinformasjon.</p>
+    <button class="btn ghost" type="button" id="doneClose">Lukk</button>
+  </div>
   <p class="msg" id="msg" hidden></p>
 </aside>
 <div class="toast" id="toast" hidden></div>
@@ -524,7 +572,7 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
 
   var toastT;
   function toast(t){ var el=$('toast'); el.textContent=t; el.hidden=false; clearTimeout(toastT); toastT=setTimeout(function(){el.hidden=true},2200); }
-  function openCart(){ $('scrim').hidden=false; $('drawer').hidden=false; $('msg').hidden=true; $('closeCart').focus(); }
+  function openCart(){ $('scrim').hidden=false; $('drawer').hidden=false; if(!$('stepDone').hidden || !cart.length) step('stepCart'); $('msg').hidden=true; $('closeCart').focus(); }
   function closeCart(){ $('scrim').hidden=true; $('drawer').hidden=true; }
 
   document.addEventListener('click', function(e){
@@ -562,19 +610,31 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
     try{ navigator.clipboard.writeText(txt).then(ok, sel); }catch(e){ sel(); }
   });
 
-  $('checkout').addEventListener('click', function(){
-    var btn = this, msg = $('msg');
-    btn.disabled = true; btn.textContent = 'Sender deg til betaling …'; msg.hidden = true; msg.className='msg';
-    fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart})})
-      .then(function(r){return r.json().then(function(d){return {ok:r.ok,status:r.status,d:d}})})
-      .then(function(res){ if(res.ok && res.d.url){ window.location.href = res.d.url; return; } throw res; })
-      .catch(function(res){
-        btn.disabled = false; btn.textContent = 'Gå til betaling';
-        msg.hidden = false;
-        if(!res || !res.d || res.status === 503){
-          msg.textContent = 'Kortbetaling er ikke slått på ennå. Send DM på Instagram for å bestille.';
-        } else { msg.className = 'msg err'; msg.textContent = res.d.error || 'Noe gikk galt. Prøv igjen.'; }
-      });
+  // ---- Bestilling (sendes på e-post til butikken) ----
+  function step(n){ ['stepCart','stepForm','stepDone'].forEach(function(id){ $(id).hidden = id!==n; }); $('msg').hidden=true; }
+  function orderSum(){
+    var sub = cart.reduce(function(a,l){var p=find(l.id);return a+(p?p.price*l.qty:0)},0);
+    var ship = $('dPick').checked ? 0 : catalog.shipping.price;
+    $('shipPrice').textContent = '('+kr(catalog.shipping.price)+')';
+    $('addrWrap').hidden = $('dPick').checked;
+    $('sum2').innerHTML = '<span>Varer</span><span>'+kr(sub)+'</span><span>Frakt</span><span>'+kr(ship)+'</span><span class="tot">Totalt</span><span class="tot">'+kr(sub+ship)+'</span>';
+  }
+  $('checkout').addEventListener('click', function(){ step('stepForm'); orderSum(); $('oName').focus(); });
+  $('backCart').addEventListener('click', function(){ step('stepCart'); });
+  $('dPost').addEventListener('change', orderSum); $('dPick').addEventListener('change', orderSum);
+  $('doneClose').addEventListener('click', function(){ closeCart(); step('stepCart'); });
+  $('stepForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn=$('sendOrder'), msg=$('msg');
+    msg.hidden=true; msg.className='msg';
+    var data = { items: cart, delivery: $('dPick').checked?'pickup':'post', website: $('oWeb').value,
+      customer: { name:$('oName').value, email:$('oEmail').value, phone:$('oPhone').value, address:$('oAddr').value, zip:$('oZip').value, city:$('oCity').value, note:$('oNote').value } };
+    btn.disabled=true; btn.textContent='Sender …';
+    fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+      .then(function(r){ return r.json().catch(function(){return {}}).then(function(d){ if(!r.ok) throw new Error(d.error||'Noe gikk galt. Prøv igjen.'); return d; }); })
+      .then(function(d){ $('doneNo').textContent=d.order; cart=[]; save(); renderCart(); step('stepDone'); })
+      .catch(function(err){ msg.hidden=false; msg.className='msg err'; msg.textContent = /Failed to fetch|NetworkError|Load failed/.test(err.message) ? 'Fikk ikke kontakt. Sjekk nettet og prøv igjen.' : err.message; })
+      .then(function(){ btn.disabled=false; btn.textContent='Send bestilling'; });
   });
 
   // 3D-tilt på merch-kort

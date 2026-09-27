@@ -33,5 +33,10 @@ Roller: **Admin** kan styre brukere og varer. **Butikk** kan bare endre varer.
 - «Tomt på lager i disse størrelsene» = bare de størrelsene blir forhåndsbestilling.
 Kunden ser «Ikke på lager – bestill nå, leveres ved neste bestillingsrunde».
 
+## Bestillinger på e-post
+Bestillinger fra nettbutikken sendes til **shop@tyranny.no** (endres med `ORDER_EMAIL` i Vercel).
+Kunden får automatisk en bekreftelse med ordrenummer.
+**Første gang:** send en testbestilling. FormSubmit sender da en aktiveringsmail til shop@tyranny.no – trykk «Activate Form». Deretter kommer alle bestillinger fram.
+
 ## Kortbetaling (valgfritt)
 En voksen oppretter Stripe-konto → legg `STRIPE_SECRET_KEY` i Environment Variables → Redeploy.
