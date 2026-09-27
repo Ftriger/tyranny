@@ -7,7 +7,7 @@
   "products": [
     {
       "id": "ts-rod",
-      "name": "T-skjorte – Reigns (rød)",
+      "name": "T-shirt - Red",
       "price": 350,
       "desc": "Sort t-skjorte med rødt trykk: logo, geitemotiv og «Tyranny reigns upon you». Laget med EP Merch.",
       "tag": "Ny",
@@ -22,7 +22,8 @@
       "inStock": true,
       "outSizes": [],
       "images": [
-        "img/merch-tskjorte-rod.jpg"
+        "img/merch-tskjorte-rod.jpg",
+        "img/uploads/mujx7k8r-8c99be23.jpg"
       ]
     },
     {
