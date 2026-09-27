@@ -34,9 +34,16 @@ Roller: **Admin** kan styre brukere og varer. **Butikk** kan bare endre varer.
 Kunden ser «Ikke på lager – bestill nå, leveres ved neste bestillingsrunde».
 
 ## Bestillinger på e-post
-Bestillinger fra nettbutikken sendes til **shop@tyranny.no** (endres med `ORDER_EMAIL` i Vercel).
-Kunden får automatisk en bekreftelse med ordrenummer.
-**Første gang:** send en testbestilling. FormSubmit sender da en aktiveringsmail til shop@tyranny.no – trykk «Activate Form». Deretter kommer alle bestillinger fram.
+Bestillinger sendes til **shop@tyranny.no** (endres med `ORDER_EMAIL`). Kunden får bekreftelse med ordrenummer.
+
+**Anbefalt – send via egen e-postkonto (havner ikke i spam).** Legg inn i Vercel → Environment Variables:
+- `SMTP_HOST` – utgående server fra e-postleverandøren (f.eks. `smtp.domeneshop.no`, `send.one.com`, `smtp.office365.com`)
+- `SMTP_PORT` – vanligvis `587` (eller `465`)
+- `SMTP_USER` – `shop@tyranny.no` (eller brukernavnet leverandøren oppgir)
+- `SMTP_PASS` – passordet til e-postkontoen
+Deretter Redeploy.
+
+**Reserve (uten SMTP):** FormSubmit. Første bestilling gir en aktiveringsmail fra `submissions@formsubmit.co` som må godkjennes.
 
 ## Kortbetaling (valgfritt)
 En voksen oppretter Stripe-konto → legg `STRIPE_SECRET_KEY` i Environment Variables → Redeploy.

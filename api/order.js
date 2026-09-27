@@ -2,6 +2,8 @@
 // Første bestilling utløser en aktiveringsmail til shop-adressen som må bekreftes én gang.
 const crypto = require('crypto');
 const { getCatalog, body, send, wrap } = require('./_lib');
+const SMTP = { host: process.env.SMTP_HOST, port: Number(process.env.SMTP_PORT || 587), user: process.env.SMTP_USER || process.env.ORDER_EMAIL || 'shop@tyranny.no', pass: process.env.SMTP_PASS };
+function esc(t) { return String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 const TO = process.env.ORDER_EMAIL || 'shop@tyranny.no';
 
 function s(v, max) { return String(v == null ? '' : v).replace(/[\r\n]+/g, ' ').trim().slice(0, max || 120); }
@@ -59,6 +61,27 @@ module.exports = wrap(async (req, res) => {
     Forhåndsbestilling: anyPre ? 'JA – noen varer sendes ved neste produksjon' : 'Nei',
   };
 
-  // Selve e-posten sendes fra kundens nettleser til FormSubmit (de blokkerer forespørsler fra servere).
+  // 1) Egen e-postkonto (SMTP) – anbefalt, havner ikke i spam
+  if (SMTP.host && SMTP.pass) {
+    const nodemailer = require('nodemailer');
+    const t = nodemailer.createTransport({ host: SMTP.host, port: SMTP.port, secure: SMTP.port === 465, auth: { user: SMTP.user, pass: SMTP.pass } });
+    const rows = Object.entries(payload).filter(([k]) => !k.startsWith('_'));
+    const text = rows.map(([k, v]) => `${k === 'email' ? 'E-post' : k}: ${v}`).join('\n');
+    const html = '<h2 style="font-family:Arial">Ny bestilling ' + esc(order) + '</h2><table style="font-family:Arial;border-collapse:collapse">' +
+      rows.map(([k, v]) => '<tr><td style="padding:6px 12px;border-bottom:1px solid #ddd;color:#666;vertical-align:top">' + esc(k === 'email' ? 'E-post' : k) + '</td><td style="padding:6px 12px;border-bottom:1px solid #ddd;white-space:pre-line">' + esc(v) + '</td></tr>').join('') + '</table>';
+    try {
+      await t.sendMail({ from: `"Tyranny nettbutikk" <${SMTP.user}>`, to: TO, replyTo: `"${cust.name}" <${cust.email}>`, subject: payload._subject, text, html });
+    } catch (e) {
+      console.error('SMTP', e && e.message);
+      return send(res, 502, { error: 'Bestillingen kunne ikke sendes akkurat nå. Prøv igjen, eller send DM på Instagram.' });
+    }
+    // Bekreftelse til kunden (feiler stille – butikken har uansett fått bestillingen)
+    try {
+      await t.sendMail({ from: `"Tyranny" <${SMTP.user}>`, to: cust.email, replyTo: TO, subject: `Takk for bestillingen – ${order}`,
+        text: `Hei ${cust.name}!\n\n${payload._autoresponse}\n\n${payload.Varer}\nLevering: ${payload.Levering}\nTotalt: ${payload.Totalt}\n\nSpørsmål? Svar på denne e-posten.` });
+    } catch (e) { console.error('SMTP kunde', e && e.message); }
+    return send(res, 200, { ok: true, order, total, sent: true });
+  }
+  // 2) Reserve: e-posten sendes fra kundens nettleser via FormSubmit
   send(res, 200, { ok: true, order, total, to: TO, payload });
 });
