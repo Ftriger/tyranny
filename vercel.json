@@ -1,1 +1,8 @@
-{ "cleanUrls": true }
+{
+  "cleanUrls": true,
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)data/users.enc'",
+  "headers": [
+    { "source": "/products.json", "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }] },
+    { "source": "/data/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
+  ]
+}

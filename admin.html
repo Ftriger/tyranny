@@ -134,7 +134,7 @@ main{padding-block:28px 80px}
   </header>
 
   <main class="wrap">
-    <div class="notice" id="noStorage" hidden><b>Lagring er ikke koblet til.</b> Du kan se varene, men endringer kan ikke lagres før Upstash Redis er lagt til i Vercel (se README).</div>
+    <div class="notice" id="noStorage" hidden><b>Lagring er ikke koblet til.</b> Du kan se varene, men endringer kan ikke lagres før GITHUB_TOKEN er lagt inn i Vercel (se README).</div>
 
     <!-- VARER -->
     <section id="panelP">
@@ -209,7 +209,10 @@ main{padding-block:28px 80px}
 (function(){
   var $=function(id){return document.getElementById(id)};
   var ME=null, STORAGE=false, products=[], editIdx=-1, edImgs=[];
-  var SIZES=['XS','S','M','L','XL','XXL','3XL'];
+  var SIZES=['XS','S','M','L','XL','XXL','3XL'], RAW='';
+  // Nye bilder er ikke publisert før Vercel er ferdig (ca. 1 min) – vis dem fra GitHub i mellomtiden
+  function src(u){ return u.charAt(0)==='/'?u:'/'+u; }
+  document.addEventListener('error',function(e){ var t=e.target; if(t.tagName==='IMG' && RAW && !t.dataset.raw && /\/img\/uploads\//.test(t.src)){ t.dataset.raw=1; t.src=RAW+t.getAttribute('src').replace(/^\//,''); } },true);
 
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
   function toast(t){var e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){e.hidden=true},2000)}
@@ -222,7 +225,7 @@ main{padding-block:28px 80px}
   // ---------- Innlogging ----------
   function boot(){
     api('/api/admin/me').then(function(d){
-      STORAGE=d.storage;
+      STORAGE=d.storage; RAW=d.raw||'';
       if(d.me){ ME=d.me; showApp(); } else showLogin(d);
     }).catch(function(){ showLogin({}); $('loginErr').textContent='Fikk ikke kontakt med serveren.'; });
   }
@@ -256,7 +259,7 @@ main{padding-block:28px 80px}
     $('pcount').textContent = products.length+' varer · '+products.filter(function(p){return p.active!==false}).length+' synlige';
     if(!products.length){ $('plist').innerHTML='<p class="label">Ingen varer ennå. Trykk «Ny vare».</p>'; return; }
     $('plist').innerHTML = products.map(function(p,i){
-      var img = (p.images&&p.images[0]) ? '<img class="thumb" src="'+esc(p.images[0].charAt(0)==='/'?p.images[0]:'/'+p.images[0])+'" alt="">' : '<div class="thumb"></div>';
+      var img = (p.images&&p.images[0]) ? '<img class="thumb" src="'+esc(src(p.images[0]))+'" alt="">' : '<div class="thumb"></div>';
       var on = p.active!==false;
       return '<div class="prow'+(on?'':' off')+'">'+img+
         '<div><div class="name">'+esc(p.name)+'<span class="pill '+(on?'on':'off')+'">'+(on?'Synlig':'Skjult')+'</span>'+(p.tag?'<span class="pill">'+esc(p.tag)+'</span>':'')+'</div>'+
@@ -312,7 +315,7 @@ main{padding-block:28px 80px}
 
   function renderImgs(){
     $('fImgs').innerHTML = edImgs.map(function(u,k){
-      return '<figure>'+(k===0?'<span class="first">FORSIDE</span>':'')+'<img src="'+esc(u.charAt(0)==='/'?u:'/'+u)+'" alt="Bilde '+(k+1)+'"><div class="ctrl">'+
+      return '<figure>'+(k===0?'<span class="first">FORSIDE</span>':'')+'<img src="'+esc(src(u))+'" alt="Bilde '+(k+1)+'"><div class="ctrl">'+
         '<button type="button" data-il="'+k+'" aria-label="Flytt til venstre">←</button><button type="button" data-ix="'+k+'" aria-label="Fjern bilde">✕</button><button type="button" data-ir="'+k+'" aria-label="Flytt til høyre">→</button></div></figure>';
     }).join('') + '<div class="drop" id="drop" role="button" tabindex="0">+ Last opp bilder<br><small>eller slipp dem her</small></div>';
   }
@@ -358,7 +361,7 @@ main{padding-block:28px 80px}
     var backup=products.slice();
     if(editIdx>=0) products[editIdx]=p; else products.push(p);
     $('edSave').disabled=true;
-    saveAll('Vare lagret').then(function(){ $('editor').hidden=true; }).catch(function(err){ products=backup; $('edErr').textContent=err.message; }).finally(function(){ $('edSave').disabled=false; });
+    saveAll('Lagret – vises på nettsiden om ca. 1 minutt').then(function(){ $('editor').hidden=true; }).catch(function(err){ products=backup; $('edErr').textContent=err.message; }).finally(function(){ $('edSave').disabled=false; });
   });
 
   // ---------- Brukere ----------

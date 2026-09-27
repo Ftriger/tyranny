@@ -1,53 +1,101 @@
 // Felles hjelpefunksjoner for API-et (filer som starter med _ blir ikke egne adresser på Vercel).
-// Lagring: Upstash Redis (Vercel → Storage → Upstash for Redis). Innlogging: brukere lagret med scrypt-hash.
+// Lagring: filer i GitHub-repoet (krever GITHUB_TOKEN). Hver lagring blir en commit, og Vercel publiserer på nytt.
+// Brukere lagres kryptert i data/users.enc (nøkkel fra ADMIN_PASSWORD).
 const crypto = require('crypto');
 const fileCatalog = require('../products.json');
 
-const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const SECRET = process.env.SESSION_SECRET || process.env.ADMIN_PASSWORD || KV_TOKEN || '';
+const TOKEN = process.env.GITHUB_TOKEN;
+const REPO = process.env.GITHUB_REPO ||
+  (process.env.VERCEL_GIT_REPO_OWNER && process.env.VERCEL_GIT_REPO_SLUG
+    ? process.env.VERCEL_GIT_REPO_OWNER + '/' + process.env.VERCEL_GIT_REPO_SLUG
+    : 'Ftriger/tyranny');
+const BRANCH = process.env.GITHUB_BRANCH || process.env.VERCEL_GIT_COMMIT_REF || 'main';
+const OWNER_PW = process.env.ADMIN_PASSWORD || '';
+const SECRET = process.env.SESSION_SECRET || OWNER_PW;
 const COOKIE = 'ty_s';
 
-function hasKV() { return !!(KV_URL && KV_TOKEN); }
+function err(msg, status) { return Object.assign(new Error(msg), { status }); }
+function hasStorage() { return !!TOKEN; }
 
-async function kv(cmd) {
-  if (!hasKV()) throw Object.assign(new Error('Lagring er ikke satt opp (Upstash Redis mangler).'), { status: 503 });
-  const r = await fetch(KV_URL, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${KV_TOKEN}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(cmd),
+// ---------- GitHub ----------
+async function gh(path, opt) {
+  if (!TOKEN) throw err('Lagring er ikke satt opp (GITHUB_TOKEN mangler i Vercel).', 503);
+  const r = await fetch('https://api.github.com/repos/' + REPO + '/contents/' + path + (opt && opt.method ? '' : '?ref=' + encodeURIComponent(BRANCH)), {
+    method: (opt && opt.method) || 'GET',
+    headers: {
+      Authorization: 'Bearer ' + TOKEN,
+      Accept: 'application/vnd.github+json',
+      'User-Agent': 'tyranny-admin',
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...(opt && opt.body ? { 'Content-Type': 'application/json' } : {}),
+    },
+    body: opt && opt.body ? JSON.stringify(opt.body) : undefined,
   });
-  const d = await r.json();
-  if (d.error) throw new Error(d.error);
-  return d.result;
+  if (r.status === 404 && !(opt && opt.method)) return null;
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401 || r.status === 403) throw err('GitHub avviste nøkkelen (sjekk GITHUB_TOKEN og at den har skrivetilgang).', 502);
+  if (r.status === 409) throw err('Noen andre lagret samtidig. Prøv igjen.', 409);
+  if (!r.ok) throw err('GitHub-feil: ' + (d.message || r.status), 502);
+  return d;
+}
+async function readFile(path) {
+  const d = await gh(path);
+  if (!d) return null;
+  return { sha: d.sha, text: Buffer.from(d.content || '', 'base64').toString('utf8') };
+}
+async function writeFile(path, contentBuf, message, sha) {
+  if (sha === undefined) { const cur = await gh(path); sha = cur ? cur.sha : undefined; }
+  return gh(path, { method: 'PUT', body: { message, content: contentBuf.toString('base64'), branch: BRANCH, ...(sha ? { sha } : {}) } });
 }
 
 // ---------- Varer ----------
-async function getCatalog() {
-  let products = null;
-  if (hasKV()) {
-    try { const raw = await kv(['GET', 'products']); if (raw) products = JSON.parse(raw); } catch (e) { /* bruk fil */ }
+async function getCatalog(fresh) {
+  if (fresh && hasStorage()) {
+    const f = await readFile('products.json');
+    if (f) return JSON.parse(f.text);
   }
-  return { currency: 'NOK', shipping: fileCatalog.shipping, products: products || fileCatalog.products };
+  return fileCatalog;
 }
-async function saveProducts(list) { await kv(['SET', 'products', JSON.stringify(list)]); }
+async function saveProducts(list, who) {
+  const f = await readFile('products.json');
+  const cat = f ? JSON.parse(f.text) : { currency: 'NOK', shipping: fileCatalog.shipping };
+  cat.products = list;
+  await writeFile('products.json', Buffer.from(JSON.stringify(cat, null, 2) + '\n'), 'Varer oppdatert av ' + who + ' (admin)', f ? f.sha : undefined);
+}
 
-// ---------- Brukere ----------
+// ---------- Brukere (kryptert fil) ----------
+function key() { return crypto.createHash('sha256').update('tyranny-users:' + OWNER_PW).digest(); }
+function encrypt(obj) {
+  const iv = crypto.randomBytes(12);
+  const c = crypto.createCipheriv('aes-256-gcm', key(), iv);
+  const enc = Buffer.concat([c.update(JSON.stringify(obj), 'utf8'), c.final()]);
+  return Buffer.from(JSON.stringify({ v: 1, iv: iv.toString('base64'), tag: c.getAuthTag().toString('base64'), data: enc.toString('base64') }));
+}
+function decrypt(text) {
+  const o = JSON.parse(text);
+  const d = crypto.createDecipheriv('aes-256-gcm', key(), Buffer.from(o.iv, 'base64'));
+  d.setAuthTag(Buffer.from(o.tag, 'base64'));
+  return JSON.parse(Buffer.concat([d.update(Buffer.from(o.data, 'base64')), d.final()]).toString('utf8'));
+}
+async function getUsers() {
+  if (!hasStorage() || !OWNER_PW) return {};
+  const f = await readFile('data/users.enc');
+  if (!f) return {};
+  try { return decrypt(f.text); } catch (e) { return {}; } // eier-passordet er byttet → brukerlisten må lages på nytt
+}
+async function saveUsers(u, who) {
+  if (!OWNER_PW) throw err('ADMIN_PASSWORD mangler i Vercel.', 503);
+  await writeFile('data/users.enc', encrypt(u), 'Brukere oppdatert av ' + who + ' (admin)');
+}
+
 function hashPw(pw, salt) {
   salt = salt || crypto.randomBytes(16).toString('hex');
-  const hash = crypto.scryptSync(String(pw), salt, 32).toString('hex');
-  return { salt, hash };
+  return { salt, hash: crypto.scryptSync(String(pw), salt, 32).toString('hex') };
 }
 function checkPw(pw, rec) {
   const { hash } = hashPw(pw, rec.salt);
   return crypto.timingSafeEqual(Buffer.from(hash, 'hex'), Buffer.from(rec.hash, 'hex'));
 }
-async function getUsers() {
-  if (!hasKV()) return {};
-  const raw = await kv(['GET', 'users']);
-  return raw ? JSON.parse(raw) : {};
-}
-async function saveUsers(u) { await kv(['SET', 'users', JSON.stringify(u)]); }
 
 // ---------- Økt (signert informasjonskapsel) ----------
 function sign(data) { return crypto.createHmac('sha256', SECRET).update(data).digest('base64url'); }
@@ -62,17 +110,15 @@ function readCookie(req) {
 }
 async function currentUser(req) {
   if (!SECRET) return null;
-  const tok = readCookie(req);
-  const [payload, sig] = tok.split('.');
+  const [payload, sig] = readCookie(req).split('.');
   if (!payload || !sig) return null;
   const good = sign(payload);
   if (sig.length !== good.length || !crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(good))) return null;
   let s; try { s = JSON.parse(Buffer.from(payload, 'base64url').toString()); } catch { return null; }
   if (!s.exp || s.exp < Date.now()) return null;
-  if (s.u === 'eier') return process.env.ADMIN_PASSWORD ? { user: 'eier', role: 'admin' } : null;
-  const users = await getUsers();
-  if (!users[s.u]) return null;
-  return { user: s.u, role: users[s.u].role };
+  if (s.u === 'eier') return OWNER_PW ? { user: 'eier', role: 'admin' } : null;
+  // Rollen ligger i den signerte informasjonskapselen; brukerlisten sjekkes ved innlogging og ved endringer.
+  return { user: s.u, role: s.r === 'admin' ? 'admin' : 'butikk' };
 }
 function setSession(res, value, maxAge) {
   res.setHeader('Set-Cookie', `${COOKIE}=${value}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`);
@@ -88,6 +134,12 @@ function send(res, status, data) { res.status(status).json(data); }
 async function guard(req, res, needAdmin) {
   const me = await currentUser(req);
   if (!me) { send(res, 401, { error: 'Du er ikke logget inn.' }); return null; }
+  if (me.user !== 'eier') {
+    // Sjekk at brukeren fortsatt finnes (slettede brukere mister tilgang)
+    const users = await getUsers();
+    if (!users[me.user]) { send(res, 401, { error: 'Brukeren finnes ikke lenger.' }); return null; }
+    me.role = users[me.user].role;
+  }
   if (needAdmin && me.role !== 'admin') { send(res, 403, { error: 'Bare administratorer kan gjøre dette.' }); return null; }
   return me;
 }
@@ -98,4 +150,4 @@ function wrap(fn) {
   };
 }
 
-module.exports = { kv, hasKV, getCatalog, saveProducts, getUsers, saveUsers, hashPw, checkPw, makeSession, setSession, currentUser, body, send, guard, wrap };
+module.exports = { REPO, BRANCH, hasStorage, writeFile, getCatalog, saveProducts, getUsers, saveUsers, hashPw, checkPw, makeSession, setSession, currentUser, body, send, guard, wrap };

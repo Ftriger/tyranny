@@ -590,7 +590,7 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
   }
 
   function getJSON(u){ return fetch(u,{cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); }
-  getJSON('/api/products').catch(function(){ return getJSON('products.json'); })
+  getJSON('products.json')
     .then(function(d){ if(d && d.products) catalog = {shipping:d.shipping||FALLBACK.shipping, products:d.products.filter(function(p){return p.active!==false})}; })
     .catch(function(){})
     .then(function(){

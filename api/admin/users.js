@@ -10,7 +10,7 @@ module.exports = wrap(async (req, res) => {
     if (String(password || '').length < 8) return send(res, 400, { error: 'Passordet må ha minst 8 tegn.' });
     const users = await getUsers();
     users[me.user] = { ...users[me.user], ...hashPw(password) };
-    await saveUsers(users);
+    await saveUsers(users, me.user);
     return send(res, 200, { ok: true });
   }
   const me = await guard(req, res, true); if (!me) return;
@@ -26,7 +26,7 @@ module.exports = wrap(async (req, res) => {
     if (String(password || '').length < 8) return send(res, 400, { error: 'Passordet må ha minst 8 tegn.' });
     const r = role === 'admin' ? 'admin' : 'butikk';
     users[u] = { role: r, created: users[u] ? users[u].created : new Date().toISOString(), ...hashPw(password) };
-    await saveUsers(users);
+    await saveUsers(users, me.user);
     return send(res, 200, { ok: true });
   }
   if (req.method === 'DELETE') {
@@ -34,7 +34,7 @@ module.exports = wrap(async (req, res) => {
     if (u === me.user) return send(res, 400, { error: 'Du kan ikke slette deg selv.' });
     if (!users[u]) return send(res, 404, { error: 'Fant ikke brukeren.' });
     delete users[u];
-    await saveUsers(users);
+    await saveUsers(users, me.user);
     return send(res, 200, { ok: true });
   }
   send(res, 405, { error: 'Ikke støttet.' });
