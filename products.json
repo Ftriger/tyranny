@@ -81,6 +81,27 @@
       "images": [
         "img/merch-patch.jpg"
       ]
+    },
+    {
+      "id": "longsleeve-red",
+      "name": "Longsleeve - Red",
+      "price": 450,
+      "desc": "Longsleeve with logo and print on the back",
+      "tag": "Ny",
+      "active": true,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/uploads/mujxabh2-9f86d3ee.jpg",
+        "img/uploads/mujxadbm-30e7b9c8.jpg"
+      ]
     }
   ]
 }
