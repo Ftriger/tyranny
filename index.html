@@ -48,7 +48,7 @@
       "event": [
         { "@type": "MusicEvent", "name": "Tyranny på Spetakkelfestivalen 2026", "startDate": "2026-11-14", "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
           "location": { "@type": "Place", "name": "Jotron Arena", "address": { "@type": "PostalAddress", "addressLocality": "Larvik", "addressCountry": "NO" } },
-          "performer": { "@id": "https://tyranny-five.vercel.app/#band" }, "image": "https://tyranny-five.vercel.app/img/plakat-spetakkel.jpg",
+          "performer": { "@id": "https://tyranny-five.vercel.app/#band" }, "image": "https://tyranny-five.vercel.app/img/plakat-spetakkel-hel.jpg",
           "offers": { "@type": "Offer", "url": "https://spetakkel.hoopla.no/event/762591642", "availability": "https://schema.org/InStock" } },
         { "@type": "MusicEvent", "name": "Tyranny på Midgardsblot 2026 (Gildehallen)", "startDate": "2026-08-15", "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
           "location": { "@type": "Place", "name": "Midgardsblot, Borre", "address": { "@type": "PostalAddress", "addressLocality": "Horten", "addressCountry": "NO" } }, "performer": { "@id": "https://tyranny-five.vercel.app/#band" } }
@@ -168,8 +168,8 @@ section.block{padding-block:clamp(72px,10vw,130px);position:relative}
 /* KONSERTER */
 .gigs{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;align-items:start}
 @media (max-width:860px){.gigs{grid-template-columns:1fr}}
-.poster{position:relative;border:1px solid var(--rule);overflow:hidden}
-.poster img{width:100%;transition:transform .6s}
+.poster{position:relative;border:1px solid var(--rule);overflow:hidden;max-width:520px;width:100%;justify-self:center;align-self:start}
+.poster img{width:100%;height:auto;transition:transform .6s}
 .poster:hover img{transform:scale(1.03)}
 .poster .stamp{position:absolute;left:16px;top:16px;background:var(--red);color:#fff;font-family:var(--cond);font-weight:800;text-transform:uppercase;letter-spacing:.08em;padding:6px 12px;font-size:16px}
 .gig-main{display:grid;gap:18px}
@@ -393,7 +393,7 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
       <h2>Se oss <em>live</em></h2>
       <div class="gigs">
         <a class="poster" href="https://spetakkelfestivalen.no/" target="_blank" rel="noopener" aria-label="Spetakkelfestivalen 2026">
-          <img src="img/plakat-spetakkel.jpg" alt="Plakat for Spetakkelfestivalen 2026 med Tsjuder, Jorn, Slagmaur og Tyranny" loading="lazy" width="640" height="639">
+          <img src="img/plakat-spetakkel-hel.jpg" alt="Plakat for Spetakkelfestivalen 2026 med Tsjuder, Jorn, Slagmaur og Tyranny" loading="lazy" width="480" height="640">
           <span class="stamp">Neste</span>
         </a>
         <div class="gig-main">
