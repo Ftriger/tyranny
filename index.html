@@ -3,13 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Tyranny</title>
-<meta name="description" content="Tyranny – norsk black metal fra Larvik. Vinnere av Imagine Norway, spilt Midgardsblot og Brussel. Spiller Spetakkelfestivalen i Jotron Arena 14. november 2026. Offisiell merch.">
-<meta property="og:title" content="TYRANNY – Norwegian black metal">
-<meta property="og:description" content="No escape. No mercy. Only Tyranny. Konserter og offisiell merch.">
+<title>Tyranny – norsk black metal fra Larvik | Offisiell side og merch</title>
+<meta name="description" content="Tyranny er et norsk black metal-band fra Larvik. Vinnere av Imagine Norway, spilt Midgardsblot og Brussel. Se konserter – neste er Spetakkelfestivalen 14. november 2026 – og kjøp offisiell merch.">
+<link rel="canonical" href="https://tyranny-five.vercel.app/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:site_name" content="Tyranny">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:title" content="TYRANNY – Norwegian black metal from Larvik">
+<meta property="og:description" content="No escape. No mercy. Only Tyranny. Konserter, bilder og offisiell merch.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://tyranny-five.vercel.app/img/live-midgardsblot-1.jpg">
+<meta property="og:image:alt" content="Tyranny live på Midgardsblot 2026">
 <meta property="og:url" content="https://tyranny-five.vercel.app/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-oppsummering">
 <meta name="theme-color" content="#070707">
 <link rel="icon" type="image/png" href="img/logo-600.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,24 +25,48 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "MusicGroup",
-  "name": "Tyranny",
-  "genre": "Black metal",
-  "foundingLocation": { "@type": "Place", "name": "Larvik, Norge" },
-  "foundingDate": "2024-09",
-  "email": "dolk@online.no",
-  "sameAs": ["https://www.instagram.com/tyranny.official/"],
-  "award": "Imagine Norway",
-  "event": [{
-    "@type": "MusicEvent",
-    "name": "Spetakkelfestivalen 2026",
-    "startDate": "2026-11-14",
-    "eventStatus": "https://schema.org/EventScheduled",
-    "location": { "@type": "Place", "name": "Jotron Arena", "address": "Larvik, Norge" },
-    "offers": { "@type": "Offer", "url": "https://spetakkel.hoopla.no/event/762591642" }
-  }]
+  "@graph": [
+    {
+      "@type": "WebSite", "@id": "https://tyranny-five.vercel.app/#site",
+      "url": "https://tyranny-five.vercel.app/", "name": "Tyranny", "inLanguage": "nb-NO",
+      "publisher": { "@id": "https://tyranny-five.vercel.app/#band" }
+    },
+    {
+      "@type": "MusicGroup", "@id": "https://tyranny-five.vercel.app/#band",
+      "name": "Tyranny", "alternateName": "Tyranny (Norge)",
+      "url": "https://tyranny-five.vercel.app/",
+      "logo": "https://tyranny-five.vercel.app/img/logo.png",
+      "image": "https://tyranny-five.vercel.app/img/live-midgardsblot-1.jpg",
+      "description": "Norsk black metal-band fra Larvik, startet under Kulturnatta i september 2024. Vinnere av Imagine Norway og representerte Norge på Imagine Experience i Brussel.",
+      "genre": ["Black metal", "Norwegian black metal"],
+      "foundingDate": "2024-09",
+      "foundingLocation": { "@type": "Place", "name": "Larvik", "address": { "@type": "PostalAddress", "addressLocality": "Larvik", "addressRegion": "Vestfold", "addressCountry": "NO" } },
+      "location": { "@type": "Place", "name": "Fabrikken, Kongegata 1, Larvik" },
+      "award": ["Vinner av Imagine Norway"],
+      "email": "dolk@online.no",
+      "sameAs": ["https://www.instagram.com/tyranny.official/", "https://www.youtube.com/watch?v=1WipEzzG3bc"],
+      "event": [
+        { "@type": "MusicEvent", "name": "Tyranny på Spetakkelfestivalen 2026", "startDate": "2026-11-14", "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+          "location": { "@type": "Place", "name": "Jotron Arena", "address": { "@type": "PostalAddress", "addressLocality": "Larvik", "addressCountry": "NO" } },
+          "performer": { "@id": "https://tyranny-five.vercel.app/#band" }, "image": "https://tyranny-five.vercel.app/img/plakat-spetakkel.jpg",
+          "offers": { "@type": "Offer", "url": "https://spetakkel.hoopla.no/event/762591642", "availability": "https://schema.org/InStock" } },
+        { "@type": "MusicEvent", "name": "Tyranny på Midgardsblot 2026 (Gildehallen)", "startDate": "2026-08-15", "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+          "location": { "@type": "Place", "name": "Midgardsblot, Borre", "address": { "@type": "PostalAddress", "addressLocality": "Horten", "addressCountry": "NO" } }, "performer": { "@id": "https://tyranny-five.vercel.app/#band" } }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Hvem er Tyranny?", "acceptedAnswer": { "@type": "Answer", "text": "Tyranny er et norsk black metal-band fra Larvik som startet under Kulturnatta i september 2024. Bandet vant Imagine Norway, spilte for Norge i Brussel og har spilt på Midgardsblot." } },
+        { "@type": "Question", "name": "Når spiller Tyranny neste gang?", "acceptedAnswer": { "@type": "Answer", "text": "Neste konsert er Spetakkelfestivalen i Jotron Arena, Larvik, lørdag 14. november 2026. Billetter selges via Hoopla." } },
+        { "@type": "Question", "name": "Hvor kan jeg kjøpe Tyranny-merch?", "acceptedAnswer": { "@type": "Answer", "text": "Offisiell merch – t-skjorter, langermet og patch – bestilles på denne nettsiden. Varene sendes fra Larvik, eller kan hentes på konsert." } },
+        { "@type": "Question", "name": "Hvordan booker jeg Tyranny?", "acceptedAnswer": { "@type": "Answer", "text": "Send e-post til dolk@online.no eller melding til @tyranny.official på Instagram." } }
+      ]
+    }
+  ]
 }
 </script>
+<script type="application/ld+json" id="ld-products"></script>
 <style>
 :root{
   color-scheme: dark;
@@ -229,6 +260,16 @@ section.block{padding-block:clamp(72px,10vw,130px);position:relative}
 .facts dt{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);padding-top:5px}
 .facts dd{margin:0;font-family:var(--cond);font-weight:700;font-size:20px;text-transform:uppercase}
 
+/* FAQ */
+.faq{display:grid;gap:8px;max-width:820px}
+.faq details{border:1px solid var(--rule);background:var(--panel);padding:0 18px}
+.faq details[open]{border-color:var(--red-dim)}
+.faq summary{cursor:pointer;font-family:var(--cond);font-weight:700;font-size:21px;text-transform:uppercase;padding:14px 0;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";float:right;color:var(--red-hot)}
+.faq details[open] summary::after{content:"–"}
+.faq p{color:#cfcac6;padding-bottom:16px;max-width:70ch}
+
 /* KONTAKT */
 .contact-box{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;border:1px solid var(--red);padding:clamp(24px,4vw,48px);background:linear-gradient(135deg,rgba(212,20,42,.14),transparent 60%)}
 @media (max-width:760px){.contact-box{grid-template-columns:1fr}}
@@ -402,7 +443,7 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
         </div>
         <p>Ny merch er her, laget sammen med EP Merch. Bestill her, så får du betalingsinfo på e-post. Vi sender fra Larvik for 99 kr, eller du henter på konsert.</p>
       </div>
-      <div class="grid" id="grid"></div>
+      <div class="grid" id="grid"><!--PRODUCTS--><!--/PRODUCTS--></div>
       <p class="dm">Vil du heller hente på konsert? Send DM på Instagram.</p>
     </div>
   </section>
@@ -429,6 +470,20 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
           <dt>Besetning</dt><dd>Birk · Nathaniel · Nathaniel</dd>
           <dt>Utgivelser</dt><dd>Første slipp kommer</dd>
         </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="faq" style="padding-top:0">
+    <div class="wrap">
+      <span class="eyebrow">Spørsmål og svar</span>
+      <h2>Kort <em>fortalt</em></h2>
+      <div class="faq">
+        <details open><summary>Hvem er Tyranny?</summary><p>Tyranny er et norsk black metal-band fra Larvik som startet under Kulturnatta i september 2024. Bandet vant Imagine Norway, spilte for Norge i Brussel og har spilt på Midgardsblot.</p></details>
+        <details><summary>Når spiller Tyranny neste gang?</summary><p>Lørdag 14. november 2026 på Spetakkelfestivalen i Jotron Arena, Larvik. <a href="https://spetakkel.hoopla.no/event/762591642" target="_blank" rel="noopener">Kjøp billett</a>.</p></details>
+        <details><summary>Hvor kan jeg kjøpe merch?</summary><p>Her på siden. T-skjorter, langermet og patch sendes fra Larvik, eller du kan hente på konsert. Varer som er tomme kan forhåndsbestilles.</p></details>
+        <details><summary>Hvordan booker jeg bandet?</summary><p>Send e-post til dolk@online.no eller melding til <a href="https://www.instagram.com/tyranny.official/" target="_blank" rel="noopener">@tyranny.official</a> på Instagram.</p></details>
+        <details lang="en"><summary>In English</summary><p>Tyranny is a raw, uncompromising Norwegian black metal band from Larvik, Norway, formed in September 2024. Winners of Imagine Norway, they represented Norway at Imagine Experience in Brussels and played Gildehallen at Midgardsblot 2026. Next show: Spetakkelfestivalen, Jotron Arena, 14 November 2026. Official merch ships from Norway. Booking: dolk@online.no.</p></details>
       </div>
     </div>
   </section>
