@@ -1,0 +1,12 @@
+{
+  "currency": "NOK",
+  "shipping": { "name": "Posten / Bring – sporbar pakke", "price": 99 },
+  "products": [
+    { "id": "ts-logo", "name": "T-skjorte – Tyranny Reigns", "type": "tee", "price": 300, "tag": "Ny", "sizes": ["S", "M", "L", "XL", "XXL"], "desc": "Sort t-skjorte med rødt logotrykk. Fra den nye merch-runden med EP Merch." },
+    { "id": "hd-logo", "name": "Hettegenser – Logo", "type": "hoodie", "price": 650, "tag": "Ny", "sizes": ["S", "M", "L", "XL", "XXL"], "desc": "Tung, sort hettegenser med rødt logo på brystet." },
+    { "id": "pt-logo", "name": "Tøymerke – rødt logo", "type": "patch", "img": "img/merch-patch.jpg", "price": 80, "tag": "Bestselger", "sizes": [], "desc": "Brodert merke med rødt Tyranny-logo. Sy det på vesten." },
+    { "id": "ls-logo", "name": "Langermet – No Mercy", "type": "longsleeve", "price": 400, "sizes": ["S", "M", "L", "XL", "XXL"], "desc": "Sort langermet. «No escape · No mercy · Only Tyranny» på ermet." },
+    { "id": "bn-logo", "name": "Lue – brodert", "type": "beanie", "price": 250, "sizes": [], "desc": "Sort strikkelue med rødt brodert logo. Én størrelse." },
+    { "id": "ps-spetakkel", "name": "Plakat – Spetakkel 2026", "type": "poster", "img": "img/plakat-spetakkel.jpg", "price": 150, "tag": "Begrenset", "sizes": [], "desc": "A3-plakat fra Spetakkelfestivalen, Jotron Arena 14. november." }
+  ]
+}
