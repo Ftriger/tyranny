@@ -69,20 +69,6 @@
       ]
     },
     {
-      "id": "pt-logo",
-      "name": "Patch – rødt logo",
-      "price": 80,
-      "desc": "Brodert merke med rødt Tyranny-logo. Sy det på vesten.",
-      "tag": "Bestselger",
-      "active": true,
-      "sizes": [],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/merch-patch.jpg"
-      ]
-    },
-    {
       "id": "longsleeve-red",
       "name": "Longsleeve - Red",
       "price": 450,
@@ -101,6 +87,20 @@
       "images": [
         "img/uploads/mujxabh2-9f86d3ee.jpg",
         "img/uploads/mujxadbm-30e7b9c8.jpg"
+      ]
+    },
+    {
+      "id": "pt-logo",
+      "name": "Patch – rødt logo",
+      "price": 80,
+      "desc": "Brodert merke med rødt Tyranny-logo. Sy det på vesten.",
+      "tag": "Bestselger",
+      "active": true,
+      "sizes": [],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/merch-patch.jpg"
       ]
     }
   ]
