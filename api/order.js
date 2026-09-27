@@ -1,4 +1,4 @@
-// Tar imot bestilling fra nettbutikken og sender den på e-post til butikken (via FormSubmit – gratis, ingen konto).
+// Kontrollerer bestillingen (priser fra varelisten) og lager e-posten som sendes til butikken via FormSubmit.
 // Første bestilling utløser en aktiveringsmail til shop-adressen som må bekreftes én gang.
 const crypto = require('crypto');
 const { getCatalog, body, send, wrap } = require('./_lib');
@@ -59,17 +59,6 @@ module.exports = wrap(async (req, res) => {
     Forhåndsbestilling: anyPre ? 'JA – noen varer sendes ved neste produksjon' : 'Nei',
   };
 
-  const origin = req.headers.origin || `https://${req.headers.host}`;
-  const r = await fetch('https://formsubmit.co/ajax/' + TO, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json', Origin: origin, Referer: origin + '/' },
-    body: JSON.stringify(payload),
-  });
-  const out = await r.json().catch(() => ({}));
-  if (!r.ok || String(out.success) !== 'true') {
-    console.error('FormSubmit', r.status, out);
-    if (/activat/i.test(String(out.message || ''))) return send(res, 503, { error: 'Bestilling er ikke aktivert ennå (butikken må bekrefte e-posten sin). Prøv igjen litt senere, eller send DM på Instagram.' });
-    return send(res, 502, { error: 'Bestillingen kunne ikke sendes akkurat nå. Prøv igjen, eller send DM på Instagram.' });
-  }
-  send(res, 200, { ok: true, order, total });
+  // Selve e-posten sendes fra kundens nettleser til FormSubmit (de blokkerer forespørsler fra servere).
+  send(res, 200, { ok: true, order, total, to: TO, payload });
 });
