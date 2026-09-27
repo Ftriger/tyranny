@@ -1,7 +1,7 @@
 // Vercel serverless-funksjon: lager en Stripe Checkout-betaling.
 // Krever miljøvariabelen STRIPE_SECRET_KEY i Vercel (Settings → Environment Variables).
 // Prisene hentes alltid fra products.json her på serveren, aldri fra nettleseren.
-const catalog = require('../products.json');
+const { getCatalog } = require('./_lib');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -23,17 +23,19 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Handlekurven er tom.' });
   }
 
+  const catalog = await getCatalog();
   const params = new URLSearchParams();
   let i = 0;
   for (const item of items) {
-    const p = catalog.products.find((x) => x.id === item.id);
+    const p = catalog.products.find((x) => x.id === item.id && x.active !== false);
     const qty = Math.max(1, Math.min(10, parseInt(item.qty, 10) || 1));
     if (!p) return res.status(400).json({ error: 'Ukjent vare: ' + item.id });
     let name = p.name;
-    if (p.sizes.length) {
+    if (p.sizes && p.sizes.length) {
       if (!p.sizes.includes(item.size)) return res.status(400).json({ error: 'Velg størrelse for ' + p.name });
       name += ' (' + item.size + ')';
     }
+    if (p.inStock === false || (p.outSizes || []).includes(item.size)) name += ' – forhåndsbestilling, sendes ved neste produksjon';
     params.append(`line_items[${i}][price_data][currency]`, 'nok');
     params.append(`line_items[${i}][price_data][unit_amount]`, String(p.price * 100));
     params.append(`line_items[${i}][price_data][product_data][name]`, name);
