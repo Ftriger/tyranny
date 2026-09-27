@@ -11,6 +11,7 @@
 <meta property="og:image" content="https://tyranny-five.vercel.app/img/live-midgardsblot-1.jpg">
 <meta property="og:url" content="https://tyranny-five.vercel.app/">
 <meta name="theme-color" content="#070707">
+<link rel="icon" type="image/png" href="img/logo-600.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Barlow+Condensed:wght@500;700;800&family=Barlow:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -73,7 +74,8 @@ p{margin:0}
 header.nav{position:fixed;left:0;right:0;top:0;padding-top:env(safe-area-inset-top,0px);z-index:40;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
 header.nav.solid{background:rgba(7,7,7,.9);backdrop-filter:blur(10px);border-color:var(--rule)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
-.nav .mark{font-family:var(--display);font-size:30px;text-decoration:none;line-height:1;color:var(--red);text-shadow:0 0 18px rgba(212,20,42,.6)}
+.nav .mark{display:block;line-height:0}
+.nav .mark img{height:44px;width:auto;filter:drop-shadow(0 0 10px rgba(212,20,42,.55))}
 .nav nav{display:flex;gap:24px}
 .nav nav a{font-family:var(--cond);font-weight:700;font-size:17px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--ink);opacity:.75;transition:opacity .2s,color .2s}
 .nav nav a:hover{opacity:1;color:var(--red-hot)}
@@ -90,10 +92,9 @@ header.nav.solid{background:rgba(7,7,7,.9);backdrop-filter:blur(10px);border-col
 .hero::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(7,7,7,.2) 0%,rgba(7,7,7,.35) 45%,var(--bg) 100%),radial-gradient(ellipse at 70% 30%,rgba(212,20,42,.35),transparent 60%);}
 #ash{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
 .hero .wrap{width:100%;padding-block:120px 56px;display:grid;gap:28px}
-.wordmark{font-family:var(--display);font-weight:700;font-size:clamp(78px,19vw,260px);line-height:.8;margin:0;color:var(--ink);text-shadow:0 0 30px rgba(212,20,42,.55),0 0 80px rgba(212,20,42,.35);position:relative;animation:flicker 2.6s steps(1) 1 both}
-.wordmark::before,.wordmark::after{content:"Tyranny";position:absolute;inset:0;pointer-events:none}
-.wordmark::before{color:var(--red);mix-blend-mode:screen;opacity:0;animation:rgb 6s infinite}
-.wordmark::after{color:transparent;-webkit-text-stroke:1px rgba(212,20,42,.6);transform:translate(8px,8px);z-index:-1}
+.wordmark{margin:0;line-height:0;width:min(820px,100%);position:relative;animation:flicker 2.6s steps(1) 1 both}
+.wordmark img{width:100%;height:auto;filter:drop-shadow(0 0 22px rgba(212,20,42,.55)) drop-shadow(0 0 60px rgba(212,20,42,.3))}
+.wordmark::after{content:"";position:absolute;inset:0;background:url("img/logo.png") center/100% 100% no-repeat;mix-blend-mode:screen;opacity:0;animation:rgb 6s infinite;pointer-events:none}
 @keyframes flicker{0%{opacity:1}5%{opacity:.1}8%{opacity:1}13%{opacity:.3}16%{opacity:1}60%{opacity:1}62%{opacity:.5}64%{opacity:1}}
 @keyframes rgb{0%,86%,100%{opacity:0;transform:none}88%{opacity:.9;transform:translate(-6px,2px);clip-path:inset(10% 0 55% 0)}90%{opacity:.9;transform:translate(5px,-3px);clip-path:inset(60% 0 8% 0)}92%{opacity:0}}
 .slogan{font-family:var(--cond);font-weight:800;text-transform:uppercase;font-size:clamp(22px,3.4vw,40px);line-height:1;letter-spacing:.04em;display:flex;flex-wrap:wrap;gap:.2em .6em}
@@ -115,7 +116,7 @@ header.nav.solid{background:rgba(7,7,7,.9);backdrop-filter:blur(10px);border-col
 .badge svg{width:100%;height:100%;animation:spin 16s linear infinite}
 .badge .core{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:clamp(34px,5vw,54px);color:var(--red-hot);text-shadow:0 0 18px rgba(212,20,42,.7)}
 @keyframes spin{to{transform:rotate(360deg)}}
-@media (max-width:640px){.badge{top:84px;width:84px}.next{grid-template-columns:1fr}.next .date{border:0;padding:0;text-align:left;display:flex;gap:12px;align-items:baseline}.next .date strong{font-size:48px}}
+@media (max-width:640px){.badge{display:none}.next h3{font-size:24px}.next{grid-template-columns:1fr}.next .date{border:0;padding:0;text-align:left;display:flex;gap:12px;align-items:baseline}.next .date strong{font-size:48px}}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--cond);font-weight:800;font-size:18px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:13px 22px;border:1px solid var(--red);color:#fff;background:var(--red);cursor:pointer;white-space:nowrap;transition:transform .15s,box-shadow .2s,background .2s;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
 .btn:hover{background:var(--red-hot);box-shadow:0 0 30px rgba(255,42,64,.7);transform:translateY(-2px)}
@@ -260,7 +261,7 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
 
 <header class="nav" id="nav">
   <div class="wrap">
-    <a class="mark" href="#top" aria-label="Tyranny – til toppen">Tyranny</a>
+    <a class="mark" href="#top" aria-label="Tyranny – til toppen"><img src="img/logo-600.png" alt="Tyranny" width="80" height="48"></a>
     <nav aria-label="Hovedmeny">
       <a href="#live">Live</a>
       <a href="#bilder">Bilder</a>
@@ -285,7 +286,7 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
     <div class="wrap">
       <div>
         <p class="eyebrow">Norsk black metal · Larvik</p>
-        <h1 class="wordmark">Tyranny</h1>
+        <h1 class="wordmark"><img src="img/logo.png" alt="Tyranny" width="1392" height="837"></h1>
       </div>
       <p class="slogan"><span>No escape.</span><span>No mercy.</span><span>Only Tyranny.</span></p>
       <div class="hero-row">
@@ -454,12 +455,11 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
   function save(){ try{ localStorage.setItem('tyranny-cart', JSON.stringify(cart)); }catch(e){} }
 
   // Tegnede produktbilder (brukes når varen ikke har eget foto)
-  var WM = '<text x="100" y="{y}" text-anchor="middle" font-family="UnifrakturCook, Georgia, serif" font-weight="700" font-size="{s}" fill="#d4142a">Tyranny</text>';
-  function wm(y,s){return WM.replace('{y}',y).replace('{s}',s)}
+  function wm(y,s){ var w=s*3.6, h=w/1.663; return '<image href="img/logo-600.png" x="'+(100-w/2)+'" y="'+(y-h*0.72)+'" width="'+w+'" height="'+h+'"/>'; }
   var S = 'fill="#161313" stroke="#3a2a2a" stroke-width="1.5"';
   var SHAPES = {
-    tee:'<path '+S+' d="M70 30 L40 42 L18 78 L42 90 L52 72 L52 176 L148 176 L148 72 L158 90 L182 78 L160 42 L130 30 Q100 50 70 30Z"/>'+wm(106,28)+'<text x="100" y="124" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="9" letter-spacing="2" fill="#ece8e4">REIGNS UPON YOU</text>',
-    longsleeve:'<path '+S+' d="M70 30 L40 42 L22 120 L14 172 L34 176 L50 110 L52 176 L148 176 L150 110 L166 176 L186 172 L178 120 L160 42 L130 30 Q100 50 70 30Z"/>'+wm(100,24)+'<text x="100" y="120" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="8" letter-spacing="2" fill="#ece8e4">NO ESCAPE · NO MERCY</text>',
+    tee:'<path '+S+' d="M70 30 L40 42 L18 78 L42 90 L52 72 L52 176 L148 176 L148 72 L158 90 L182 78 L160 42 L130 30 Q100 50 70 30Z"/>'+wm(106,28)+'<text x="100" y="138" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="9" letter-spacing="2" fill="#ece8e4">REIGNS UPON YOU</text>',
+    longsleeve:'<path '+S+' d="M70 30 L40 42 L22 120 L14 172 L34 176 L50 110 L52 176 L148 176 L150 110 L166 176 L186 172 L178 120 L160 42 L130 30 Q100 50 70 30Z"/>'+wm(100,24)+'<text x="100" y="130" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="800" font-size="8" letter-spacing="2" fill="#ece8e4">NO ESCAPE · NO MERCY</text>',
     hoodie:'<path '+S+' d="M72 36 Q100 4 128 36 L160 48 L180 120 L184 174 L162 176 L150 118 L150 180 L50 180 L50 118 L38 176 L16 174 L20 120 L40 48Z"/><path fill="none" stroke="#3a2a2a" stroke-width="1.5" d="M78 38 Q100 62 122 38 M60 150 L140 150"/>'+wm(110,24),
     beanie:'<path '+S+' d="M44 130 Q44 44 100 44 Q156 44 156 130Z"/><rect '+S+' x="38" y="126" width="124" height="34"/><circle '+S+' cx="100" cy="38" r="12"/>'+wm(150,20),
     patch:'<rect '+S+' x="22" y="68" width="156" height="64"/>'+wm(112,34),
