@@ -48,27 +48,6 @@
       ]
     },
     {
-      "id": "ls-gra",
-      "name": "Longsleeve - Grey",
-      "price": 450,
-      "desc": "Sort langermet med logo foran, geitemotiv på ryggen og mønster på begge ermer.",
-      "tag": "Ny",
-      "active": true,
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL",
-        "XXL"
-      ],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/merch-langermet-foran.jpg",
-        "img/merch-langermet-bak.jpg"
-      ]
-    },
-    {
       "id": "longsleeve-red",
       "name": "Longsleeve - Red",
       "price": 450,
@@ -87,6 +66,27 @@
       "images": [
         "img/uploads/mujxabh2-9f86d3ee.jpg",
         "img/uploads/mujxadbm-30e7b9c8.jpg"
+      ]
+    },
+    {
+      "id": "ls-gra",
+      "name": "Longsleeve - Grey",
+      "price": 450,
+      "desc": "Sort langermet med logo foran, geitemotiv på ryggen og mønster på begge ermer.",
+      "tag": "Ny",
+      "active": true,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/merch-langermet-foran.jpg",
+        "img/merch-langermet-bak.jpg"
       ]
     },
     {
