@@ -30,7 +30,7 @@
       "id": "ts-gra",
       "name": "T-shirt - Grey",
       "price": 350,
-      "desc": "Sort t-skjorte med grått trykk foran og stor T på ryggen.",
+      "desc": "T-shirt with grey print on the front and back",
       "tag": "Ny",
       "active": true,
       "sizes": [
