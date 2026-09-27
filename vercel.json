@@ -30,5 +30,6 @@
       ]
     }
   ],
-  "buildCommand": "node build.js"
+  "buildCommand": "node build.js",
+  "outputDirectory": "public"
 }

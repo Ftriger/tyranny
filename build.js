@@ -1,7 +1,13 @@
-// Kjøres av Vercel ved hver publisering (også når admin lagrer varer).
+// Kjøres av Vercel ved hver publisering. Resultatet legges i mappen public/ som Vercel viser (også når admin lagrer varer).
 // Skriver varene rett inn i index.html (synlig for Google/AI uten JavaScript), lager Product-schema,
 // sitemap.xml og setter riktig adresse (SITE_URL, f.eks. https://tyranny.no).
 const fs = require('fs');
+const path = require('path');
+const OUT = 'public';
+fs.rmSync(OUT, { recursive: true, force: true });
+fs.mkdirSync(OUT);
+for (const f of ['admin.html', 'products.json']) fs.copyFileSync(f, path.join(OUT, f));
+fs.cpSync('img', path.join(OUT, 'img'), { recursive: true });
 const SITE = (process.env.SITE_URL || 'https://tyranny-five.vercel.app').replace(/\/$/, '');
 const OLD = 'https://tyranny-five.vercel.app';
 const cat = JSON.parse(fs.readFileSync('products.json', 'utf8'));
@@ -41,10 +47,10 @@ html = html.replace(/<!--PRODUCTS-->[\s\S]*?<!--\/PRODUCTS-->/, `<!--PRODUCTS-->
 html = html.replace(/<script type="application\/ld\+json" id="ld-products">[\s\S]*?<\/script>/, `<script type="application/ld+json" id="ld-products">${JSON.stringify(ld)}</script>`);
 html = html.replace(/  var FALLBACK = .*;\n/, '  var FALLBACK = ' + JSON.stringify({ shipping: cat.shipping, products: cat.products }) + ';\n');
 if (SITE !== OLD) html = html.split(OLD).join(SITE);
-fs.writeFileSync('index.html', html);
+fs.writeFileSync(path.join(OUT, 'index.html'), html);
 
 const today = new Date().toISOString().slice(0, 10);
-fs.writeFileSync('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
+fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url><loc>${SITE}/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>
 ${products.flatMap((p) => p.images || []).concat(['img/live-midgardsblot-1.jpg', 'img/plakat-spetakkel.jpg']).map((u) => `    <image:image><image:loc>${esc(abs(u))}</image:loc></image:image>`).join('\n')}
@@ -52,7 +58,7 @@ ${products.flatMap((p) => p.images || []).concat(['img/live-midgardsblot-1.jpg',
   <url><loc>${SITE}/llms.txt</loc><lastmod>${today}</lastmod></url>
 </urlset>
 `);
-fs.writeFileSync('robots.txt', `User-agent: *
+fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /api/
@@ -78,5 +84,5 @@ Sitemap: ${SITE}/sitemap.xml
 let llms = fs.readFileSync('llms.txt', 'utf8');
 llms = llms.replace(/## Merch[\s\S]*?(?=\n## )/, '## Merch\n' + products.map((p) => `- ${p.name}: ${kr(p.price)}${p.inStock === false ? ' (forhåndsbestilling)' : ''}`).join('\n') + `\n- Frakt i Norge: ${kr(cat.shipping.price)}, eller hent på konsert\n- Bestilling: ${SITE}/#merch\n`);
 if (SITE !== OLD) llms = llms.split(OLD).join(SITE);
-fs.writeFileSync('llms.txt', llms);
+fs.writeFileSync(path.join(OUT, 'llms.txt'), llms);
 console.log('Bygget for', SITE, '–', products.length, 'varer');
