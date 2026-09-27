@@ -9,6 +9,7 @@
       "id": "ts-rod",
       "name": "T-skjorte – Reigns (rød)",
       "price": 350,
+      "desc": "Sort t-skjorte med rødt trykk: logo, geitemotiv og «Tyranny reigns upon you». Laget med EP Merch.",
       "tag": "Ny",
       "active": true,
       "sizes": [
@@ -18,17 +19,17 @@
         "XL",
         "XXL"
       ],
+      "inStock": true,
+      "outSizes": [],
       "images": [
         "img/merch-tskjorte-rod.jpg"
-      ],
-      "desc": "Sort t-skjorte med rødt trykk: logo, geitemotiv og «Tyranny reigns upon you». Laget med EP Merch.",
-      "inStock": true,
-      "outSizes": []
+      ]
     },
     {
       "id": "ts-gra",
       "name": "T-skjorte – Reigns (grå)",
       "price": 350,
+      "desc": "Sort t-skjorte med grått trykk foran og stor T på ryggen.",
       "tag": "Ny",
       "active": true,
       "sizes": [
@@ -38,18 +39,18 @@
         "XL",
         "XXL"
       ],
+      "inStock": true,
+      "outSizes": [],
       "images": [
         "img/merch-tskjorte-gra-foran.jpg",
         "img/merch-tskjorte-gra-bak.jpg"
-      ],
-      "desc": "Sort t-skjorte med grått trykk foran og stor T på ryggen.",
-      "inStock": true,
-      "outSizes": []
+      ]
     },
     {
       "id": "ls-gra",
       "name": "Langermet – Reigns",
       "price": 450,
+      "desc": "Sort langermet med logo foran, geitemotiv på ryggen og mønster på begge ermer.",
       "tag": "Ny",
       "active": true,
       "sizes": [
@@ -59,27 +60,26 @@
         "XL",
         "XXL"
       ],
+      "inStock": true,
+      "outSizes": [],
       "images": [
         "img/merch-langermet-foran.jpg",
         "img/merch-langermet-bak.jpg"
-      ],
-      "desc": "Sort langermet med logo foran, geitemotiv på ryggen og mønster på begge ermer.",
-      "inStock": true,
-      "outSizes": []
+      ]
     },
     {
       "id": "pt-logo",
-      "name": "Tøymerke – rødt logo",
+      "name": "Patch – rødt logo",
       "price": 80,
+      "desc": "Brodert merke med rødt Tyranny-logo. Sy det på vesten.",
       "tag": "Bestselger",
       "active": true,
       "sizes": [],
+      "inStock": true,
+      "outSizes": [],
       "images": [
         "img/merch-patch.jpg"
-      ],
-      "desc": "Brodert merke med rødt Tyranny-logo. Sy det på vesten.",
-      "inStock": true,
-      "outSizes": []
+      ]
     }
   ]
 }
