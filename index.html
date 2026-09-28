@@ -289,6 +289,8 @@ section.block{padding-block:clamp(72px,10vw,130px);position:relative}
 .contact-actions{display:flex;flex-wrap:wrap;gap:12px}
 footer{padding-block:40px;border-top:1px solid var(--rule);color:var(--mute);font-family:var(--mono);font-size:12px;letter-spacing:.08em}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.madeby{color:var(--mute);text-decoration:none;border-bottom:1px solid var(--rule);transition:color .2s,border-color .2s}
+.madeby:hover{color:var(--ink);border-color:var(--red)}
 footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-spacing:0}
 
 /* HANDLEKURV */
@@ -521,7 +523,7 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
 </main>
 
 <footer>
-  <div class="wrap"><span>© 2026 Tyranny · Larvik, Norge</span><span class="sig">Only Tyranny</span></div>
+  <div class="wrap"><span>© 2026 Tyranny · Norge</span><a class="madeby" href="https://www.klarnettside.no/" target="_blank" rel="noopener">Nettside laget av klarnettside.no</a><span class="sig">Only Tyranny</span></div>
 </footer>
 
 <div class="lightbox" id="lightbox" hidden><img id="lbImg" alt=""><p id="lbCap"></p></div>

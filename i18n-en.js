@@ -98,7 +98,8 @@ module.exports = [
   // ---- Booking / bunn ----
   ['<span class="eyebrow">Booking og kontakt</span>', '<span class="eyebrow">Booking & contact</span>'],
   ['<button class="btn" id="copyMail" type="button">Kopier e-post</button>', '<button class="btn" id="copyMail" type="button">Copy email</button>'],
-  ['<span>© 2026 Tyranny · Larvik, Norge</span>', '<span>© 2026 Tyranny · Larvik, Norway</span>'],
+  ['<span>© 2026 Tyranny · Norge</span>', '<span>© 2026 Tyranny · Norway</span>'],
+  ['rel="noopener">Nettside laget av klarnettside.no</a>', 'rel="noopener">Website by klarnettside.no</a>'],
 
   // ---- Handlekurv og bestilling ----
   ['aria-label="Handlekurv">\n  <header><h3>Handlekurv</h3><button class="x" id="closeCart" type="button">Lukk ✕</button>', 'aria-label="Cart">\n  <header><h3>Cart</h3><button class="x" id="closeCart" type="button">Close ✕</button>'],
