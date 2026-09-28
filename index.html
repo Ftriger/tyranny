@@ -708,9 +708,10 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
       .then(function(d){
         if(d.sent) return d;
         return fetch('https://formsubmit.co/ajax/'+d.to,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d.payload)})
-          .then(function(r){ return r.json().catch(function(){return {}}); })
+          .then(function(r){ return r.json().catch(function(){return {}}); }, function(){ return {}; })
           .then(function(o){
             if(String(o.success)!=='true'){
+              if(d.saved) return d;
               if(/activat/i.test(String(o.message||''))) throw new Error('Nettbutikken venter på aktivering av e-posten sin. Prøv igjen senere, eller send DM på Instagram.');
               throw new Error('Bestillingen kunne ikke sendes akkurat nå. Prøv igjen, eller send DM på Instagram.');
             }

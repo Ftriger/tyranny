@@ -1,7 +1,7 @@
 // Kontrollerer bestillingen (priser fra varelisten) og lager e-posten som sendes til butikken via FormSubmit.
 // Første bestilling utløser en aktiveringsmail til shop-adressen som må bekreftes én gang.
 const crypto = require('crypto');
-const { getCatalog, body, send, wrap } = require('./_lib');
+const { getCatalog, updateOrders, hasStorage, body, send, wrap } = require('./_lib');
 const SMTP = { host: process.env.SMTP_HOST, port: Number(process.env.SMTP_PORT || 587), user: process.env.SMTP_USER || process.env.ORDER_EMAIL || 'shop@tyranny.no', pass: process.env.SMTP_PASS };
 function esc(t) { return String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 const TO = process.env.ORDER_EMAIL || 'shop@tyranny.no';
@@ -66,6 +66,15 @@ module.exports = wrap(async (req, res) => {
     Forhåndsbestilling: anyPre ? 'JA – noen varer sendes ved neste produksjon' : 'Nei',
   };
 
+  // 0) Lagre bestillingen i admin først (kryptert i GitHub) – da går den aldri tapt
+  let saved = false;
+  if (hasStorage() && process.env.ADMIN_PASSWORD) {
+    try {
+      await updateOrders((list) => [{ order, date: d.toISOString(), status: 'ny', lang: EN ? 'en' : 'no', customer: cust, pickup, lines, sum, ship, total, preorder: anyPre }].concat(list).slice(0, 2000), 'Ny bestilling');
+      saved = true;
+    } catch (e) { console.error('Lagring av bestilling feilet', e && e.message); }
+  }
+
   // 1) Egen e-postkonto (SMTP) – anbefalt, havner ikke i spam
   if (SMTP.host && SMTP.pass) {
     const nodemailer = require('nodemailer');
@@ -78,6 +87,7 @@ module.exports = wrap(async (req, res) => {
       await t.sendMail({ from: `"Tyranny nettbutikk" <${SMTP.user}>`, to: TO, replyTo: `"${cust.name}" <${cust.email}>`, subject: payload._subject, text, html });
     } catch (e) {
       console.error('SMTP', e && e.message);
+      if (saved) return send(res, 200, { ok: true, order, total, sent: true });
       return send(res, 502, { error: t('Bestillingen kunne ikke sendes akkurat nå. Prøv igjen, eller send DM på Instagram.', 'Your order could not be sent right now. Please try again, or send us a DM on Instagram.') });
     }
     // Bekreftelse til kunden (feiler stille – butikken har uansett fått bestillingen)
@@ -90,5 +100,5 @@ module.exports = wrap(async (req, res) => {
     return send(res, 200, { ok: true, order, total, sent: true });
   }
   // 2) Reserve: e-posten sendes fra kundens nettleser via FormSubmit
-  send(res, 200, { ok: true, order, total, to: TO, payload });
+  send(res, 200, { ok: true, order, total, to: TO, payload, saved });
 });

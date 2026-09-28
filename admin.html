@@ -99,6 +99,22 @@ main{padding-block:28px 80px}
 .table th{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:400}
 .tablewrap{overflow-x:auto}
 .card{background:var(--panel);border:1px solid var(--rule);padding:20px;display:grid;gap:14px;margin-top:22px}
+.badge-n{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;background:var(--red);color:#fff;font-family:var(--mono);font-size:11px;margin-left:4px}
+.mailbox{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;background:var(--panel);border:1px solid var(--rule);padding:12px 16px;margin-bottom:16px;font-size:14px}
+.olist{display:grid;gap:10px}
+.ocard{background:var(--panel);border:1px solid var(--rule);padding:14px 16px;display:grid;gap:10px}
+.ocard.ny{border-color:var(--red)}
+.ohead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;align-items:baseline}
+.ohead b{font-family:var(--mono);font-size:15px}
+.ohead .when{font-family:var(--mono);font-size:12px;color:var(--mute)}
+.ohead .tot{font-family:var(--cond);font-weight:800;font-size:22px;color:var(--red-hot)}
+.ogrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px}
+@media (max-width:640px){.ogrid{grid-template-columns:1fr}}
+.ogrid pre{margin:0;white-space:pre-wrap;font-family:var(--body);font-size:14px}
+.ogrid a{color:var(--ink)}
+.oacts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.st{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--rule)}
+.st.ny{border-color:var(--red);color:var(--red-hot)}.st.betalt{border-color:var(--warn);color:var(--warn)}.st.sendt,.st.hentet{border-color:var(--ok);color:var(--ok)}.st.kansellert{color:var(--mute)}
 .err{color:#ff8a95;font-size:14px;min-height:1.2em}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-family:var(--cond);font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:10px 18px;z-index:50}
 .confirm{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:#ff8a95}
@@ -126,6 +142,7 @@ main{padding-block:28px 80px}
       <a href="/" title="Til nettsiden"><img src="img/logo-600.png" alt="Tyranny"></a>
       <div class="tabs" role="tablist">
         <button role="tab" id="tabP" aria-selected="true" type="button">Varer</button>
+        <button role="tab" id="tabO" aria-selected="false" type="button">Bestillinger <span class="badge-n" id="newCount" hidden></span></button>
         <button role="tab" id="tabU" aria-selected="false" type="button">Brukere</button>
         <button role="tab" id="tabM" aria-selected="false" type="button">Min konto</button>
       </div>
@@ -175,6 +192,22 @@ main{padding-block:28px 80px}
     </section>
 
     <!-- BRUKERE -->
+    <section id="panelO" hidden>
+      <div class="bar">
+        <div><h2>Bestillinger</h2><span class="label" id="ocount"></span></div>
+        <div class="row" style="align-items:center">
+          <select id="ofilter" aria-label="Vis" style="width:auto"><option value="aktive">Aktive</option><option value="alle">Alle</option><option value="ny">Nye</option><option value="betalt">Betalt</option><option value="sendt">Sendt</option><option value="hentet">Hentet</option><option value="kansellert">Kansellert</option></select>
+          <button class="btn ghost" id="oreload" type="button">Oppdater</button>
+        </div>
+      </div>
+      <div class="mailbox" id="mailbox">
+        <div><b>E-post:</b> <span id="mailInfo">–</span></div>
+        <button class="btn ghost small" id="mailTest" type="button">Send testmail</button>
+        <p class="err" id="mailRes" style="margin:0;flex-basis:100%"></p>
+      </div>
+      <div class="olist" id="olist"></div>
+    </section>
+
     <section id="panelU" hidden>
       <div class="bar"><h2>Brukere</h2></div>
       <div class="tablewrap"><table class="table"><thead><tr><th>Brukernavn</th><th>Rolle</th><th>Opprettet</th><th></th></tr></thead><tbody id="ulist"></tbody></table></div>
@@ -245,13 +278,13 @@ main{padding-block:28px 80px}
     $('whoName').textContent=ME.user+' · '+(ME.role==='admin'?'admin':'butikk');
     $('tabU').hidden = ME.role!=='admin';
     $('noStorage').hidden = STORAGE;
-    tab('P'); loadProducts();
+    tab('P'); loadProducts(); loadOrders(true);
   }
 
   // ---------- Faner ----------
-  function tab(k){ ['P','U','M'].forEach(function(x){ $('tab'+x).setAttribute('aria-selected',x===k); $('panel'+x).hidden = x!==k; });
-    if(k==='U') loadUsers(); }
-  $('tabP').onclick=function(){tab('P')}; $('tabU').onclick=function(){tab('U')}; $('tabM').onclick=function(){tab('M')};
+  function tab(k){ ['P','O','U','M'].forEach(function(x){ $('tab'+x).setAttribute('aria-selected',x===k); $('panel'+x).hidden = x!==k; });
+    if(k==='U') loadUsers(); if(k==='O') loadOrders(); }
+  $('tabP').onclick=function(){tab('P')}; $('tabO').onclick=function(){tab('O')}; $('tabU').onclick=function(){tab('U')}; $('tabM').onclick=function(){tab('M')};
 
   // ---------- Varer ----------
   function loadProducts(){ api('/api/admin/products').then(function(d){ products=d.products||[]; renderProducts(); }).catch(function(e){ toast(e.message); }); }
@@ -362,6 +395,48 @@ main{padding-block:28px 80px}
     if(editIdx>=0) products[editIdx]=p; else products.push(p);
     $('edSave').disabled=true;
     saveAll('Lagret – vises på nettsiden om ca. 1 minutt').then(function(){ $('editor').hidden=true; }).catch(function(err){ products=backup; $('edErr').textContent=err.message; }).finally(function(){ $('edSave').disabled=false; });
+  });
+
+  // ---------- Bestillinger ----------
+  var ORDERS=[];
+  var SLBL={ny:'Ny',betalt:'Betalt',sendt:'Sendt',hentet:'Hentet',kansellert:'Kansellert'};
+  function loadOrders(quiet){
+    api('/api/admin/orders').then(function(d){
+      ORDERS=d.orders||[];
+      var n=ORDERS.filter(function(o){return o.status==='ny'}).length;
+      $('newCount').textContent=n; $('newCount').hidden=!n;
+      $('mailInfo').textContent = d.mail.smtp ? ('sendes via '+d.mail.host+' til '+d.mail.to) : ('SMTP ikke satt opp – sendes via FormSubmit til '+d.mail.to+' (kan havne i spam)');
+      if(!quiet || !$('panelO').hidden) renderOrders();
+    }).catch(function(e){ if(!quiet) $('olist').innerHTML='<p class="err">'+esc(e.message)+'</p>'; });
+  }
+  function renderOrders(){
+    var f=$('ofilter').value;
+    var list=ORDERS.filter(function(o){ return f==='alle' ? true : f==='aktive' ? (o.status==='ny'||o.status==='betalt') : o.status===f; });
+    $('ocount').textContent = ORDERS.length+' totalt · '+ORDERS.filter(function(o){return o.status==='ny'}).length+' nye';
+    if(!list.length){ $('olist').innerHTML='<p class="label">Ingen bestillinger her.</p>'; return; }
+    $('olist').innerHTML=list.map(function(o){
+      var c=o.customer||{};
+      var addr = o.pickup ? 'Hentes på konsert' : esc(c.address)+', '+esc(c.zip)+' '+esc(c.city);
+      var acts = ['betalt','sendt','hentet','kansellert','ny'].filter(function(x){return x!==o.status}).map(function(x){ return '<button class="btn ghost small" type="button" data-ost="'+x+'" data-oid="'+esc(o.order)+'">'+SLBL[x]+'</button>'; }).join('');
+      return '<div class="ocard '+esc(o.status)+'"><div class="ohead"><div><b>'+esc(o.order)+'</b> <span class="st '+esc(o.status)+'">'+SLBL[o.status]+'</span>'+(o.preorder?' <span class="st betalt">Forhåndsbestilling</span>':'')+(o.lang==='en'?' <span class="st">Engelsk</span>':'')+'</div>'+
+        '<span class="when">'+new Date(o.date).toLocaleString('nb-NO',{dateStyle:'short',timeStyle:'short'})+'</span><span class="tot">'+Number(o.total).toLocaleString('nb-NO')+' kr</span></div>'+
+        '<div class="ogrid"><div><span class="label">Varer</span><pre>'+esc((o.lines||[]).join('\n'))+'</pre><div class="label" style="margin-top:6px">Frakt: '+Number(o.ship||0)+' kr</div></div>'+
+        '<div><span class="label">Kunde</span><div>'+esc(c.name)+'</div><div><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a> · <a href="tel:'+esc(c.phone)+'">'+esc(c.phone)+'</a></div><div>'+addr+'</div>'+(c.note?'<div style="margin-top:6px;color:var(--warn)">«'+esc(c.note)+'»</div>':'')+'</div></div>'+
+        '<div class="oacts"><span class="label">Sett som:</span>'+acts+'<span style="flex:1"></span><span data-odelw="1"><button class="btn danger small" type="button" data-odel="'+esc(o.order)+'">Slett</button></span></div></div>';
+    }).join('');
+  }
+  $('ofilter').addEventListener('change',renderOrders);
+  $('oreload').addEventListener('click',function(){ loadOrders(); });
+  $('olist').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.ost){ b.disabled=true; api('/api/admin/orders',{method:'POST',json:{order:b.dataset.oid,status:b.dataset.ost}}).then(function(d){ ORDERS=d.orders; loadOrders(); toast('Status oppdatert'); }).catch(function(err){ toast(err.message); b.disabled=false; }); }
+    if(b.dataset.odel){ b.parentNode.innerHTML='<span class="confirm">Slette '+esc(b.dataset.odel)+'? <button class="btn danger small" type="button" data-odelyes="'+esc(b.dataset.odel)+'">Ja</button><button class="btn ghost small" type="button" data-odelno="1">Nei</button></span>'; }
+    if(b.dataset.odelyes){ api('/api/admin/orders?order='+encodeURIComponent(b.dataset.odelyes),{method:'DELETE'}).then(function(d){ ORDERS=d.orders; loadOrders(); toast('Bestilling slettet'); }).catch(function(err){ toast(err.message); }); }
+    if(b.dataset.odelno) renderOrders();
+  });
+  $('mailTest').addEventListener('click',function(){
+    var b=this; b.disabled=true; $('mailRes').style.color=''; $('mailRes').textContent='Sender …';
+    api('/api/admin/orders',{method:'POST',json:{action:'mailtest'}}).then(function(d){ $('mailRes').style.color=d.ok?'var(--ok)':''; $('mailRes').textContent=d.message; }).catch(function(e){ $('mailRes').textContent=e.message; }).finally(function(){ b.disabled=false; });
   });
 
   // ---------- Brukere ----------

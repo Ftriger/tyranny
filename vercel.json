@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)data/users.enc'",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)data'",
   "headers": [
     {
       "source": "/products.json",

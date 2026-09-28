@@ -44,7 +44,7 @@ async function readFile(path) {
   return { sha: d.sha, text: Buffer.from(d.content || '', 'base64').toString('utf8') };
 }
 async function writeFile(path, contentBuf, message, sha) {
-  if (sha === undefined) { const cur = await gh(path); sha = cur ? cur.sha : undefined; }
+  if (sha === null) sha = undefined; else if (sha === undefined) { const cur = await gh(path); sha = cur ? cur.sha : undefined; }
   return gh(path, { method: 'PUT', body: { message, content: contentBuf.toString('base64'), branch: BRANCH, ...(sha ? { sha } : {}) } });
 }
 
@@ -86,6 +86,22 @@ async function getUsers() {
 async function saveUsers(u, who) {
   if (!OWNER_PW) throw err('ADMIN_PASSWORD mangler i Vercel.', 503);
   await writeFile('data/users.enc', encrypt(u), 'Brukere oppdatert av ' + who + ' (admin)');
+}
+
+// ---------- Bestillinger (kryptert fil, så ingen bestilling går tapt selv om e-posten feiler) ----------
+async function readOrders() {
+  if (!hasStorage() || !OWNER_PW) return { list: [], sha: undefined };
+  const f = await readFile('data/orders.enc');
+  if (!f) return { list: [], sha: undefined };
+  try { return { list: decrypt(f.text), sha: f.sha }; } catch (e) { return { list: [], sha: f.sha }; }
+}
+async function updateOrders(fn, msg) {
+  for (let i = 0; i < 3; i++) {
+    const { list, sha } = await readOrders();
+    const next = fn(list.slice());
+    try { await writeFile('data/orders.enc', encrypt(next), msg || 'Bestillinger oppdatert', sha || null); return next; }
+    catch (e) { if (e.status !== 409 || i === 2) throw e; }
+  }
 }
 
 function hashPw(pw, salt) {
@@ -150,4 +166,4 @@ function wrap(fn) {
   };
 }
 
-module.exports = { REPO, BRANCH, hasStorage, writeFile, getCatalog, saveProducts, getUsers, saveUsers, hashPw, checkPw, makeSession, setSession, currentUser, body, send, guard, wrap };
+module.exports = { readOrders, updateOrders, REPO, BRANCH, hasStorage, writeFile, getCatalog, saveProducts, getUsers, saveUsers, hashPw, checkPw, makeSession, setSession, currentUser, body, send, guard, wrap };
