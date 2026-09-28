@@ -1,6 +1,6 @@
 # Tyranny
 
-> Tyranny er et norsk black metal-band fra Larvik i Vestfold. Rå, tung og uoppusset black metal. Offisiell nettside: https://tyranny-five.vercel.app
+> Tyranny er et norsk black metal-band fra Larvik i Vestfold. Rå, tung og uoppusset black metal. Offisiell nettside: https://tyranny-five.vercel.app (engelsk: https://tyranny-five.vercel.app/en/)
 
 ## Fakta
 - Sjanger: Black metal (norsk black metal)

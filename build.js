@@ -13,14 +13,17 @@ const OLD = 'https://tyranny-five.vercel.app';
 const cat = JSON.parse(fs.readFileSync('products.json', 'utf8'));
 const products = cat.products.filter((p) => p.active !== false);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const kr = (n) => n.toLocaleString('nb-NO') + ' kr';
+const kr = (n, en) => en ? n.toLocaleString('en-GB') + ' NOK' : n.toLocaleString('nb-NO') + ' kr';
+const TAG_EN = { Ny: 'New', Bestselger: 'Bestseller', Begrenset: 'Limited', Utsolgt: 'Sold out', Tilbud: 'Sale' };
 const abs = (u) => SITE + '/' + String(u).replace(/^\//, '');
 
 // Statiske varekort (JavaScript bytter dem ut med interaktive kort)
-const cards = products.map((p) => {
-  const img = p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" loading="lazy">` : '';
-  return `<article class="item"><div class="pic">${img}</div><div class="row"><h3>${esc(p.name)}</h3><span class="price">${kr(p.price)}</span></div><p class="desc">${esc(p.desc || '')}</p></article>`;
+const cardsFor = (en) => products.map((p) => {
+  const src = p.images && p.images[0] ? (/^(\/|https?:)/.test(p.images[0]) ? p.images[0] : '/' + p.images[0]) : '';
+  const img = src ? `<img src="${esc(src)}" alt="${esc(p.name)}" loading="lazy">` : '';
+  return `<article class="item"><div class="pic">${img}</div><div class="row"><h3>${esc(p.name)}</h3><span class="price">${kr(p.price, en)}</span></div><p class="desc">${esc(p.desc || '')}</p></article>`;
 }).join('');
+const cards = cardsFor(false);
 
 const ld = {
   '@context': 'https://schema.org',
@@ -49,12 +52,28 @@ html = html.replace(/  var FALLBACK = .*;\n/, '  var FALLBACK = ' + JSON.stringi
 if (SITE !== OLD) html = html.split(OLD).join(SITE);
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
 
+// Engelsk versjon på /en/
+let en = html;
+const missing = [];
+for (const [no, eng] of require('./i18n-en.js')) {
+  const a = no.split('SITE').join(SITE), b = eng.split('SITE').join(SITE);
+  if (!en.includes(a)) { missing.push(a.slice(0, 70)); continue; }
+  en = en.split(a).join(b);
+}
+en = en.replace(/<!--PRODUCTS-->[\s\S]*?<!--\/PRODUCTS-->/, `<!--PRODUCTS-->${cardsFor(true)}<!--/PRODUCTS-->`);
+fs.mkdirSync(path.join(OUT, 'en'), { recursive: true });
+fs.writeFileSync(path.join(OUT, 'en', 'index.html'), en);
+if (missing.length) console.warn('Engelsk: fant ikke disse norske tekstene (oppdater i18n-en.js):\n - ' + missing.join('\n - '));
+
 const today = new Date().toISOString().slice(0, 10);
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>${SITE}/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="no" href="${SITE}/"/><xhtml:link rel="alternate" hreflang="en" href="${SITE}/en/"/>
 ${products.flatMap((p) => p.images || []).concat(['img/live-midgardsblot-1.jpg', 'img/plakat-spetakkel.jpg']).map((u) => `    <image:image><image:loc>${esc(abs(u))}</image:loc></image:image>`).join('\n')}
   </url>
+  <url><loc>${SITE}/en/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="no" href="${SITE}/"/><xhtml:link rel="alternate" hreflang="en" href="${SITE}/en/"/></url>
   <url><loc>${SITE}/llms.txt</loc><lastmod>${today}</lastmod></url>
 </urlset>
 `);

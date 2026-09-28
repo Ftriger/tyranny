@@ -14,24 +14,26 @@ module.exports = wrap(async (req, res) => {
   const b = await body(req);
   if (b.website) return send(res, 200, { ok: true, order: 'TY-0' }); // skjult felt fylt ut = robot
 
+  const EN = b.lang === 'en';
+  const t = (no, en) => (EN ? en : no);
   const c = b.customer || {};
   const cust = { name: s(c.name, 80), email: s(c.email, 120), phone: s(c.phone, 30), address: s(c.address, 120), zip: s(c.zip, 10), city: s(c.city, 60), note: String(c.note || '').trim().slice(0, 600) };
   const pickup = b.delivery === 'pickup';
-  if (!cust.name) return send(res, 400, { error: 'Skriv navnet ditt.' });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cust.email)) return send(res, 400, { error: 'Skriv en gyldig e-postadresse.' });
-  if (cust.phone.replace(/\D/g, '').length < 8) return send(res, 400, { error: 'Skriv et gyldig telefonnummer.' });
-  if (!pickup && (!cust.address || !cust.zip || !cust.city)) return send(res, 400, { error: 'Skriv adresse, postnummer og sted.' });
+  if (!cust.name) return send(res, 400, { error: t('Skriv navnet ditt.', 'Please enter your name.') });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cust.email)) return send(res, 400, { error: t('Skriv en gyldig e-postadresse.', 'Please enter a valid email address.') });
+  if (cust.phone.replace(/\D/g, '').length < 8) return send(res, 400, { error: t('Skriv et gyldig telefonnummer.', 'Please enter a valid phone number.') });
+  if (!pickup && (!cust.address || !cust.zip || !cust.city)) return send(res, 400, { error: t('Skriv adresse, postnummer og sted.', 'Please enter your address, postcode and city.') });
 
   const catalog = await getCatalog();
   const items = Array.isArray(b.items) ? b.items.slice(0, 30) : [];
-  if (!items.length) return send(res, 400, { error: 'Handlekurven er tom.' });
+  if (!items.length) return send(res, 400, { error: t('Handlekurven er tom.', 'Your cart is empty.') });
   const lines = []; let sum = 0; let anyPre = false;
   for (const it of items) {
     const p = catalog.products.find((x) => x.id === it.id && x.active !== false);
-    if (!p) return send(res, 400, { error: 'En av varene finnes ikke lenger. Tøm kurven og prøv igjen.' });
+    if (!p) return send(res, 400, { error: t('En av varene finnes ikke lenger. Tøm kurven og prøv igjen.', 'One of the items is no longer available. Empty your cart and try again.') });
     const qty = Math.max(1, Math.min(10, parseInt(it.qty, 10) || 1));
     const size = p.sizes && p.sizes.length ? s(it.size, 8) : '';
-    if (p.sizes && p.sizes.length && !p.sizes.includes(size)) return send(res, 400, { error: 'Velg størrelse for ' + p.name + '.' });
+    if (p.sizes && p.sizes.length && !p.sizes.includes(size)) return send(res, 400, { error: t('Velg størrelse for ', 'Choose a size for ') + p.name + '.' });
     const pre = p.inStock === false || (p.outSizes || []).includes(size);
     anyPre = anyPre || pre;
     sum += p.price * qty;
@@ -47,7 +49,10 @@ module.exports = wrap(async (req, res) => {
     _template: 'box',
     _captcha: 'false',
     _replyto: cust.email,
-    _autoresponse: `Takk for bestillingen hos Tyranny! Ordrenummer: ${order}. Totalt: ${kr(total)}. Vi tar kontakt med betalingsinformasjon så snart som mulig.${anyPre ? ' Merk: noen varer er forhåndsbestilt og sendes ved neste produksjon.' : ''} – Tyranny`,
+    _autoresponse: EN
+      ? `Thanks for your order from Tyranny! Order number: ${order}. Total: ${total} NOK. We will send you payment details as soon as possible.${anyPre ? ' Note: some items are pre-ordered and ship with the next print run.' : ''} – Tyranny`
+      : `Takk for bestillingen hos Tyranny! Ordrenummer: ${order}. Totalt: ${kr(total)}. Vi tar kontakt med betalingsinformasjon så snart som mulig.${anyPre ? ' Merk: noen varer er forhåndsbestilt og sendes ved neste produksjon.' : ''} – Tyranny`,
+    Språk: EN ? 'Engelsk (kunden skrev på engelsk – svar på engelsk)' : 'Norsk',
     Ordrenummer: order,
     Varer: lines.join('\n'),
     Varesum: kr(sum),
@@ -73,12 +78,14 @@ module.exports = wrap(async (req, res) => {
       await t.sendMail({ from: `"Tyranny nettbutikk" <${SMTP.user}>`, to: TO, replyTo: `"${cust.name}" <${cust.email}>`, subject: payload._subject, text, html });
     } catch (e) {
       console.error('SMTP', e && e.message);
-      return send(res, 502, { error: 'Bestillingen kunne ikke sendes akkurat nå. Prøv igjen, eller send DM på Instagram.' });
+      return send(res, 502, { error: t('Bestillingen kunne ikke sendes akkurat nå. Prøv igjen, eller send DM på Instagram.', 'Your order could not be sent right now. Please try again, or send us a DM on Instagram.') });
     }
     // Bekreftelse til kunden (feiler stille – butikken har uansett fått bestillingen)
     try {
-      await t.sendMail({ from: `"Tyranny" <${SMTP.user}>`, to: cust.email, replyTo: TO, subject: `Takk for bestillingen – ${order}`,
-        text: `Hei ${cust.name}!\n\n${payload._autoresponse}\n\n${payload.Varer}\nLevering: ${payload.Levering}\nTotalt: ${payload.Totalt}\n\nSpørsmål? Svar på denne e-posten.` });
+      await t.sendMail({ from: `"Tyranny" <${SMTP.user}>`, to: cust.email, replyTo: TO, subject: EN ? `Thanks for your order – ${order}` : `Takk for bestillingen – ${order}`,
+        text: EN
+          ? `Hi ${cust.name}!\n\n${payload._autoresponse}\n\n${payload.Varer}\nDelivery: ${payload.Levering}\nTotal: ${total} NOK\n\nQuestions? Just reply to this email.`
+          : `Hei ${cust.name}!\n\n${payload._autoresponse}\n\n${payload.Varer}\nLevering: ${payload.Levering}\nTotalt: ${payload.Totalt}\n\nSpørsmål? Svar på denne e-posten.` });
     } catch (e) { console.error('SMTP kunde', e && e.message); }
     return send(res, 200, { ok: true, order, total, sent: true });
   }
