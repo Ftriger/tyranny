@@ -416,11 +416,11 @@ main{padding-block:28px 80px}
     if(!list.length){ $('olist').innerHTML='<p class="label">Ingen bestillinger her.</p>'; return; }
     $('olist').innerHTML=list.map(function(o){
       var c=o.customer||{};
-      var addr = o.pickup ? 'Hentes på konsert' : esc(c.address)+', '+esc(c.zip)+' '+esc(c.city);
+      var addr = o.pickup ? 'Hentes på konsert' : esc(c.address)+', '+esc(c.zip)+' '+esc(c.city)+(o.intl?', <b>'+esc(c.country)+'</b>':'');
       var acts = ['betalt','sendt','hentet','kansellert','ny'].filter(function(x){return x!==o.status}).map(function(x){ return '<button class="btn ghost small" type="button" data-ost="'+x+'" data-oid="'+esc(o.order)+'">'+SLBL[x]+'</button>'; }).join('');
-      return '<div class="ocard '+esc(o.status)+'"><div class="ohead"><div><b>'+esc(o.order)+'</b> <span class="st '+esc(o.status)+'">'+SLBL[o.status]+'</span>'+(o.preorder?' <span class="st betalt">Forhåndsbestilling</span>':'')+(o.lang==='en'?' <span class="st">Engelsk</span>':'')+'</div>'+
+      return '<div class="ocard '+esc(o.status)+'"><div class="ohead"><div><b>'+esc(o.order)+'</b> <span class="st '+esc(o.status)+'">'+SLBL[o.status]+'</span>'+(o.preorder?' <span class="st betalt">Forhåndsbestilling</span>':'')+(o.intl?' <span class="st ny">🌍 Utland – send tilbud</span>':'')+(o.lang==='en'?' <span class="st">Engelsk</span>':'')+'</div>'+
         '<span class="when">'+new Date(o.date).toLocaleString('nb-NO',{dateStyle:'short',timeStyle:'short'})+'</span><span class="tot">'+Number(o.total).toLocaleString('nb-NO')+' kr</span></div>'+
-        '<div class="ogrid"><div><span class="label">Varer</span><pre>'+esc((o.lines||[]).join('\n'))+'</pre><div class="label" style="margin-top:6px">Frakt: '+Number(o.ship||0)+' kr</div></div>'+
+        '<div class="ogrid"><div><span class="label">Varer</span><pre>'+esc((o.lines||[]).join('\n'))+(o.wish?'\n'+esc(o.wish):'')+'</pre><div class="label" style="margin-top:6px">Frakt: '+(o.intl?'tilbud må sendes':Number(o.ship||0)+' kr')+'</div></div>'+
         '<div><span class="label">Kunde</span><div>'+esc(c.name)+'</div><div><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a> · <a href="tel:'+esc(c.phone)+'">'+esc(c.phone)+'</a></div><div>'+addr+'</div>'+(c.note?'<div style="margin-top:6px;color:var(--warn)">«'+esc(c.note)+'»</div>':'')+'</div></div>'+
         '<div class="oacts"><span class="label">Sett som:</span>'+acts+'<span style="flex:1"></span><span data-odelw="1"><button class="btn danger small" type="button" data-odel="'+esc(o.order)+'">Slett</button></span></div></div>';
     }).join('');

@@ -109,7 +109,7 @@ module.exports = [
   ['<label for="oEmail">E-post</label>', '<label for="oEmail">Email</label>'],
   ['<label for="oPhone">Telefon</label>', '<label for="oPhone">Phone</label>'],
   ['<legend>Levering</legend>', '<legend>Delivery</legend>'],
-  ['value="post" checked> Send med posten <span id="shipPrice">', 'value="post" checked> Ship by post <span id="shipPrice">'],
+  ['value="post" checked> Send med posten i Norge <span id="shipPrice">', 'value="post" checked> Ship within Norway <span id="shipPrice">'],
   ['value="pickup"> Hent på konsert (gratis)</label>', 'value="pickup"> Pick up at a show (free)</label>'],
   ['<label for="oAddr">Adresse</label>', '<label for="oAddr">Address</label>'],
   ['<label for="oZip">Postnr.</label>', '<label for="oZip">Postcode</label>'],
@@ -147,4 +147,14 @@ module.exports = [
   ["btn.textContent='Send bestilling';", "btn.textContent='Place order';"],
   ["toast('Takk for bestillingen!');", "toast('Thanks for your order!');"],
   ["'<div><b>LIVE</b><span>NÅ</span></div>'", "'<div><b>LIVE</b><span>NOW</span></div>'"],
+
+  // ---- Bestilling fra utlandet ----
+  ['<div><b>Bestilling fra utlandet?</b> <span>Vi sender over hele verden. Fyll ut skjemaet, så får du et pristilbud med frakt og toll på e-post.</span></div>\n        <button class="btn ghost" type="button" id="intlBtn">Bestilling fra utlandet</button>', '<div><b>Ordering from outside Norway?</b> <span>We ship worldwide. Fill in the form and we will email you a quote including shipping (and duties where needed).</span></div>\n        <button class="btn" type="button" id="intlBtn">International order</button>'],
+  ['value="intl"> Sending utenfor Norge (pristilbud på e-post)</label>', 'value="intl"> Outside Norway (we email you a shipping quote)</label>'],
+  ['<label for="oCountry">Land</label>', '<label for="oCountry">Country</label>'],
+  ['<option>Sverige</option><option>Danmark</option><option>Finland</option><option>Tyskland</option><option>Storbritannia</option><option>Nederland</option><option>Polen</option><option>Frankrike</option>', '<option>Sweden</option><option>Denmark</option><option>Finland</option><option>Germany</option><option>United Kingdom</option><option>Netherlands</option><option>Poland</option><option>France</option>'],
+  ['<label for="oWish">Hva vil du bestille? (vare, størrelse, antall)</label><textarea id="oWish" rows="3" placeholder="F.eks. 1 × T-shirt Red, str. L">', '<label for="oWish">What would you like to order? (item, size, quantity)</label><textarea id="oWish" rows="3" placeholder="E.g. 1 × T-shirt Red, size L">'],
+  ['<p class="intl-note" id="intlNote" hidden>Vi sender deg et pristilbud med frakt på e-post før du betaler. Utenfor Norge kan det komme toll og mva ved levering (til USA betaler vi tollen og legger den inn i tilbudet).</p>', '<p class="intl-note" id="intlNote" hidden>We will email you a quote including shipping before you pay anything. Import duties/VAT may apply in your country on delivery (for the USA we prepay the duties and include them in the quote).</p>'],
+  ["var SHIPQ = 'tilbud';", "var SHIPQ = 'quote';"],
+  ["'<span>Varer</span><span>'+kr(sub)+'</span><span>Frakt</span><span>'+SHIPQ+'</span><span class=\"tot\">Totalt</span>", "'<span>Items</span><span>'+kr(sub)+'</span><span>Shipping</span><span>'+SHIPQ+'</span><span class=\"tot\">Total</span>"],
 ];

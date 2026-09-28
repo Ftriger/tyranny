@@ -254,6 +254,10 @@ section.block{padding-block:clamp(72px,10vw,130px);position:relative}
 .stock.pre::before{content:"◷ "}
 .pre-l{display:block;color:#f0b43c!important}
 .pre-note{grid-column:1/-1;margin:0 0 10px;font-family:var(--body);font-size:13px;color:#f0b43c;line-height:1.45}
+.intl-cta{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;margin-top:22px;border:1px dashed var(--red-dim);padding:16px 20px;background:rgba(212,20,42,.05)}
+.intl-cta b{font-family:var(--cond);font-weight:800;text-transform:uppercase;font-size:20px;letter-spacing:.03em;margin-right:6px}
+.intl-cta span{color:var(--mute);font-size:15px}
+.intl-note{font-size:13px;color:#f0b43c;margin:0;line-height:1.45}
 .dm{margin-top:22px;font-family:var(--mono);font-size:13px;color:var(--mute)}
 
 /* OM */
@@ -461,6 +465,10 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
         <p>Ny merch er her, laget sammen med EP Merch. Bestill her, så får du betalingsinfo på e-post. Vi sender fra Larvik for 99 kr, eller du henter på konsert.</p>
       </div>
       <div class="grid" id="grid"><!--PRODUCTS--><!--/PRODUCTS--></div>
+      <div class="intl-cta">
+        <div><b>Bestilling fra utlandet?</b> <span>Vi sender over hele verden. Fyll ut skjemaet, så får du et pristilbud med frakt og toll på e-post.</span></div>
+        <button class="btn ghost" type="button" id="intlBtn">Bestilling fra utlandet</button>
+      </div>
       <p class="dm">Vil du heller hente på konsert? Send DM på Instagram.</p>
     </div>
   </section>
@@ -542,9 +550,12 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
     <div class="f"><label for="oEmail">E-post</label><input id="oEmail" type="email" autocomplete="email" required></div>
     <div class="f"><label for="oPhone">Telefon</label><input id="oPhone" type="tel" autocomplete="tel" required></div>
     <fieldset class="f"><legend>Levering</legend>
-      <label class="opt"><input type="radio" name="delivery" id="dPost" value="post" checked> Send med posten <span id="shipPrice"></span></label>
+      <label class="opt"><input type="radio" name="delivery" id="dPost" value="post" checked> Send med posten i Norge <span id="shipPrice"></span></label>
       <label class="opt"><input type="radio" name="delivery" id="dPick" value="pickup"> Hent på konsert (gratis)</label>
+      <label class="opt"><input type="radio" name="delivery" id="dIntl" value="intl"> Sending utenfor Norge (pristilbud på e-post)</label>
     </fieldset>
+    <div class="f" id="countryWrap" hidden><label for="oCountry">Land</label><input id="oCountry" autocomplete="country-name" list="countries"><datalist id="countries"><option>Sverige</option><option>Danmark</option><option>Finland</option><option>Tyskland</option><option>Storbritannia</option><option>Nederland</option><option>Polen</option><option>Frankrike</option><option>USA</option><option>Canada</option><option>Australia</option></datalist></div>
+    <div class="f" id="wishWrap" hidden><label for="oWish">Hva vil du bestille? (vare, størrelse, antall)</label><textarea id="oWish" rows="3" placeholder="F.eks. 1 × T-shirt Red, str. L"></textarea></div>
     <div id="addrWrap">
       <div class="f"><label for="oAddr">Adresse</label><input id="oAddr" autocomplete="street-address"></div>
       <div class="f2"><div class="f"><label for="oZip">Postnr.</label><input id="oZip" inputmode="numeric" autocomplete="postal-code" maxlength="10"></div>
@@ -553,6 +564,7 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
     <div class="f"><label for="oNote">Melding (valgfritt)</label><textarea id="oNote" rows="2"></textarea></div>
     <input type="text" id="oWeb" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
     <div class="sum" id="sum2"></div>
+    <p class="intl-note" id="intlNote" hidden>Vi sender deg et pristilbud med frakt på e-post før du betaler. Utenfor Norge kan det komme toll og mva ved levering (til USA betaler vi tollen og legger den inn i tilbudet).</p>
     <p class="pay-note">Du betaler ikke nå. Bestillingen sendes til Tyranny, og du får betalingsinformasjon på e-post.</p>
     <button class="btn" id="sendOrder" type="submit">Send bestilling</button>
   </form>
@@ -685,23 +697,30 @@ footer .sig{font-family:var(--display);font-size:22px;color:var(--red);letter-sp
 
   // ---- Bestilling (sendes på e-post til butikken) ----
   function step(n){ ['stepCart','stepForm','stepDone'].forEach(function(id){ $(id).hidden = id!==n; }); $('msg').hidden=true; }
+  var SHIPQ = 'tilbud';
   function orderSum(){
     var sub = cart.reduce(function(a,l){var p=find(l.id);return a+(p?p.price*l.qty:0)},0);
-    var ship = $('dPick').checked ? 0 : catalog.shipping.price;
+    var intl = $('dIntl').checked, ship = ($('dPick').checked || intl) ? 0 : catalog.shipping.price;
     $('shipPrice').textContent = '('+kr(catalog.shipping.price)+')';
     $('addrWrap').hidden = $('dPick').checked;
-    $('sum2').innerHTML = '<span>Varer</span><span>'+kr(sub)+'</span><span>Frakt</span><span>'+kr(ship)+'</span><span class="tot">Totalt</span><span class="tot">'+kr(sub+ship)+'</span>';
+    $('countryWrap').hidden = !intl; $('intlNote').hidden = !intl;
+    $('wishWrap').hidden = !(intl && !cart.length);
+    $('sum2').hidden = !cart.length;
+    $('sum2').innerHTML = intl
+      ? '<span>Varer</span><span>'+kr(sub)+'</span><span>Frakt</span><span>'+SHIPQ+'</span><span class="tot">Totalt</span><span class="tot">'+kr(sub)+' +</span>'
+      : '<span>Varer</span><span>'+kr(sub)+'</span><span>Frakt</span><span>'+kr(ship)+'</span><span class="tot">Totalt</span><span class="tot">'+kr(sub+ship)+'</span>';
   }
   $('checkout').addEventListener('click', function(){ step('stepForm'); orderSum(); $('oName').focus(); });
   $('backCart').addEventListener('click', function(){ step('stepCart'); });
-  $('dPost').addEventListener('change', orderSum); $('dPick').addEventListener('change', orderSum);
+  $('dPost').addEventListener('change', orderSum); $('dPick').addEventListener('change', orderSum); $('dIntl').addEventListener('change', orderSum);
+  $('intlBtn').addEventListener('click', function(){ openCart(); step('stepForm'); $('dIntl').checked=true; orderSum(); $('oName').focus(); });
   $('doneClose').addEventListener('click', function(){ closeCart(); step('stepCart'); });
   $('stepForm').addEventListener('submit', function(e){
     e.preventDefault();
     var btn=$('sendOrder'), msg=$('msg');
     msg.hidden=true; msg.className='msg';
-    var data = { lang: document.documentElement.lang, items: cart, delivery: $('dPick').checked?'pickup':'post', website: $('oWeb').value,
-      customer: { name:$('oName').value, email:$('oEmail').value, phone:$('oPhone').value, address:$('oAddr').value, zip:$('oZip').value, city:$('oCity').value, note:$('oNote').value } };
+    var data = { lang: document.documentElement.lang, items: cart, delivery: $('dIntl').checked?'intl':($('dPick').checked?'pickup':'post'), wish: $('oWish').value, website: $('oWeb').value,
+      customer: { name:$('oName').value, email:$('oEmail').value, phone:$('oPhone').value, address:$('oAddr').value, zip:$('oZip').value, city:$('oCity').value, country:$('oCountry').value, note:$('oNote').value } };
     btn.disabled=true; btn.textContent='Sender …';
     fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
       .then(function(r){ return r.json().catch(function(){return {}}).then(function(d){ if(!r.ok) throw new Error(d.error||'Noe gikk galt. Prøv igjen.'); return d; }); })
