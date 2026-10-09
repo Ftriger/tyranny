@@ -6,6 +6,20 @@
   },
   "products": [
     {
+      "id": "pt-logo",
+      "name": "Patch – red logo",
+      "price": 80,
+      "desc": "Patch with red logo",
+      "tag": "Ny",
+      "active": true,
+      "sizes": [],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/uploads/muzn1umh-f10d6d69.jpg"
+      ]
+    },
+    {
       "id": "ts-rod",
       "name": "T-shirt - Red",
       "price": 350,
@@ -24,20 +38,6 @@
       "images": [
         "img/merch-tskjorte-rod.jpg",
         "img/uploads/mujx7k8r-8c99be23.jpg"
-      ]
-    },
-    {
-      "id": "pt-logo",
-      "name": "Patch – red logo",
-      "price": 80,
-      "desc": "Patch with red logo",
-      "tag": "Ny",
-      "active": true,
-      "sizes": [],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/uploads/muzn1umh-f10d6d69.jpg"
       ]
     },
     {
