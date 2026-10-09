@@ -41,27 +41,6 @@
       ]
     },
     {
-      "id": "ts-gra",
-      "name": "T-shirt - Grey",
-      "price": 350,
-      "desc": "T-shirt with grey print on the front and back",
-      "tag": "Ny",
-      "active": true,
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL",
-        "XXL"
-      ],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/merch-tskjorte-gra-foran.jpg",
-        "img/merch-tskjorte-gra-bak.jpg"
-      ]
-    },
-    {
       "id": "hoodie-red-print",
       "name": "Hoodie - Red",
       "price": 650,
@@ -81,6 +60,27 @@
         "img/uploads/muzoiq4d-e956ef19.jpg",
         "img/uploads/muzois8t-0eb0f965.jpg",
         "img/uploads/muzoiu5e-bcf3bdf7.jpg"
+      ]
+    },
+    {
+      "id": "ts-gra",
+      "name": "T-shirt - Grey",
+      "price": 350,
+      "desc": "T-shirt with grey print on the front and back",
+      "tag": "Ny",
+      "active": true,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/merch-tskjorte-gra-foran.jpg",
+        "img/merch-tskjorte-gra-bak.jpg"
       ]
     },
     {
