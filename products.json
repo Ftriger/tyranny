@@ -62,27 +62,6 @@
       ]
     },
     {
-      "id": "longsleeve-red",
-      "name": "Longsleeve - Red",
-      "price": 450,
-      "desc": "Longsleeve with logo on front and print on the back",
-      "tag": "Ny",
-      "active": true,
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL",
-        "XXL"
-      ],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/uploads/mujxabh2-9f86d3ee.jpg",
-        "img/uploads/mujxadbm-30e7b9c8.jpg"
-      ]
-    },
-    {
       "id": "hoodie-red-print",
       "name": "Hoodie - Red",
       "price": 650,
@@ -102,6 +81,27 @@
         "img/uploads/muzoiq4d-e956ef19.jpg",
         "img/uploads/muzois8t-0eb0f965.jpg",
         "img/uploads/muzoiu5e-bcf3bdf7.jpg"
+      ]
+    },
+    {
+      "id": "longsleeve-red",
+      "name": "Longsleeve - Red",
+      "price": 450,
+      "desc": "Longsleeve with logo on front and print on the back",
+      "tag": "Ny",
+      "active": true,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/uploads/mujxabh2-9f86d3ee.jpg",
+        "img/uploads/mujxadbm-30e7b9c8.jpg"
       ]
     },
     {
