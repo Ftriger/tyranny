@@ -69,6 +69,20 @@
       ]
     },
     {
+      "id": "pt-logo",
+      "name": "Patch – red logo",
+      "price": 80,
+      "desc": "Patch with red logo",
+      "tag": "Ny",
+      "active": true,
+      "sizes": [],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/uploads/muzn1umh-f10d6d69.jpg"
+      ]
+    },
+    {
       "id": "ls-gra",
       "name": "Longsleeve - Grey",
       "price": 450,
@@ -87,20 +101,6 @@
       "images": [
         "img/merch-langermet-foran.jpg",
         "img/merch-langermet-bak.jpg"
-      ]
-    },
-    {
-      "id": "pt-logo",
-      "name": "Patch – red logo",
-      "price": 80,
-      "desc": "Patch with red logo",
-      "tag": "Ny",
-      "active": true,
-      "sizes": [],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/uploads/muzn1umh-f10d6d69.jpg"
       ]
     },
     {
