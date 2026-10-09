@@ -27,6 +27,20 @@
       ]
     },
     {
+      "id": "pt-logo",
+      "name": "Patch – red logo",
+      "price": 80,
+      "desc": "Patch with red logo",
+      "tag": "Ny",
+      "active": true,
+      "sizes": [],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/uploads/muzn1umh-f10d6d69.jpg"
+      ]
+    },
+    {
       "id": "ts-gra",
       "name": "T-shirt - Grey",
       "price": 350,
@@ -45,20 +59,6 @@
       "images": [
         "img/merch-tskjorte-gra-foran.jpg",
         "img/merch-tskjorte-gra-bak.jpg"
-      ]
-    },
-    {
-      "id": "pt-logo",
-      "name": "Patch – red logo",
-      "price": 80,
-      "desc": "Patch with red logo",
-      "tag": "Ny",
-      "active": true,
-      "sizes": [],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/uploads/muzn1umh-f10d6d69.jpg"
       ]
     },
     {
