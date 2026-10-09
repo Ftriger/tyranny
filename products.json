@@ -90,6 +90,20 @@
       ]
     },
     {
+      "id": "pt-logo",
+      "name": "Patch – red logo",
+      "price": 80,
+      "desc": "Patch with red logo",
+      "tag": "Ny",
+      "active": true,
+      "sizes": [],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/uploads/muzn1umh-f10d6d69.jpg"
+      ]
+    },
+    {
       "id": "hoodie-red-print",
       "name": "Hoodie - Red",
       "price": 650,
@@ -109,20 +123,6 @@
         "img/uploads/muzoiq4d-e956ef19.jpg",
         "img/uploads/muzois8t-0eb0f965.jpg",
         "img/uploads/muzoiu5e-bcf3bdf7.jpg"
-      ]
-    },
-    {
-      "id": "pt-logo",
-      "name": "Patch – red logo",
-      "price": 80,
-      "desc": "Patch with red logo",
-      "tag": "Ny",
-      "active": true,
-      "sizes": [],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/uploads/muzn1umh-f10d6d69.jpg"
       ]
     }
   ]
