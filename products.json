@@ -48,6 +48,20 @@
       ]
     },
     {
+      "id": "pt-logo",
+      "name": "Patch – red logo",
+      "price": 80,
+      "desc": "Patch with red logo",
+      "tag": "Ny",
+      "active": true,
+      "sizes": [],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/uploads/muzn1umh-f10d6d69.jpg"
+      ]
+    },
+    {
       "id": "longsleeve-red",
       "name": "Longsleeve - Red",
       "price": 450,
@@ -66,20 +80,6 @@
       "images": [
         "img/uploads/mujxabh2-9f86d3ee.jpg",
         "img/uploads/mujxadbm-30e7b9c8.jpg"
-      ]
-    },
-    {
-      "id": "pt-logo",
-      "name": "Patch – red logo",
-      "price": 80,
-      "desc": "Patch with red logo",
-      "tag": "Ny",
-      "active": true,
-      "sizes": [],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/uploads/muzn1umh-f10d6d69.jpg"
       ]
     },
     {
