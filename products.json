@@ -20,27 +20,6 @@
       ]
     },
     {
-      "id": "ts-rod",
-      "name": "T-shirt - Red",
-      "price": 350,
-      "desc": "T-shirt with red print on the front and back",
-      "tag": "Bestselger",
-      "active": true,
-      "sizes": [
-        "S",
-        "M",
-        "L",
-        "XL",
-        "XXL"
-      ],
-      "inStock": true,
-      "outSizes": [],
-      "images": [
-        "img/merch-tskjorte-rod.jpg",
-        "img/uploads/mujx7k8r-8c99be23.jpg"
-      ]
-    },
-    {
       "id": "hoodie-red-print",
       "name": "Hoodie - Red",
       "price": 650,
@@ -60,6 +39,27 @@
         "img/uploads/muzoiq4d-e956ef19.jpg",
         "img/uploads/muzois8t-0eb0f965.jpg",
         "img/uploads/muzoiu5e-bcf3bdf7.jpg"
+      ]
+    },
+    {
+      "id": "ts-rod",
+      "name": "T-shirt - Red",
+      "price": 350,
+      "desc": "T-shirt with red print on the front and back",
+      "tag": "Bestselger",
+      "active": true,
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "inStock": true,
+      "outSizes": [],
+      "images": [
+        "img/merch-tskjorte-rod.jpg",
+        "img/uploads/mujx7k8r-8c99be23.jpg"
       ]
     },
     {
