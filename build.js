@@ -70,7 +70,7 @@ fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="U
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>${SITE}/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="no" href="${SITE}/"/><xhtml:link rel="alternate" hreflang="en" href="${SITE}/en/"/>
-${products.flatMap((p) => p.images || []).concat(['img/live-midgardsblot-1.jpg', 'img/plakat-spetakkel.jpg']).map((u) => `    <image:image><image:loc>${esc(abs(u))}</image:loc></image:image>`).join('\n')}
+${products.flatMap((p) => p.images || []).concat(['img/live-midgardsblot-1.jpg', 'img/plakat-spetakkel.jpg', 'img/plakat-kross-pa-halsen.jpg']).map((u) => `    <image:image><image:loc>${esc(abs(u))}</image:loc></image:image>`).join('\n')}
   </url>
   <url><loc>${SITE}/en/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="no" href="${SITE}/"/><xhtml:link rel="alternate" hreflang="en" href="${SITE}/en/"/></url>
