@@ -3,6 +3,7 @@
 // Brukere lagres kryptert i data/users.enc (nøkkel fra ADMIN_PASSWORD).
 const crypto = require('crypto');
 const fileCatalog = require('../products.json');
+const fileEvents = require('../events.json');
 
 const TOKEN = process.env.GITHUB_TOKEN;
 const REPO = process.env.GITHUB_REPO ||
@@ -61,6 +62,19 @@ async function saveProducts(list, who) {
   const cat = f ? JSON.parse(f.text) : { currency: 'NOK', shipping: fileCatalog.shipping };
   cat.products = list;
   await writeFile('products.json', Buffer.from(JSON.stringify(cat, null, 2) + '\n'), 'Varer oppdatert av ' + who + ' (admin)', f ? f.sha : undefined);
+}
+
+// ---------- Konserter (events.json i roten, så hver lagring publiserer siden på nytt) ----------
+async function getEvents(fresh) {
+  if (fresh && hasStorage()) {
+    const f = await readFile('events.json');
+    if (f) return JSON.parse(f.text).events || [];
+  }
+  return fileEvents.events || [];
+}
+async function saveEvents(list, who) {
+  const f = await readFile('events.json');
+  await writeFile('events.json', Buffer.from(JSON.stringify({ events: list }, null, 2) + '\n'), 'Konserter oppdatert av ' + who + ' (admin)', f ? f.sha : undefined);
 }
 
 // ---------- Brukere (kryptert fil) ----------
@@ -166,4 +180,4 @@ function wrap(fn) {
   };
 }
 
-module.exports = { readOrders, updateOrders, REPO, BRANCH, hasStorage, writeFile, getCatalog, saveProducts, getUsers, saveUsers, hashPw, checkPw, makeSession, setSession, currentUser, body, send, guard, wrap };
+module.exports = { readOrders, updateOrders, REPO, BRANCH, hasStorage, writeFile, getCatalog, saveProducts, getEvents, saveEvents, getUsers, saveUsers, hashPw, checkPw, makeSession, setSession, currentUser, body, send, guard, wrap };

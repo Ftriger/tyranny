@@ -14,7 +14,7 @@
 - Booking: dolk@online.no
 
 ## Neste konsert
-- Krøss på halsen Vol. 4, Rockeklubben i Porsgrunn – lørdag 5. desember 2026. Fri alder, gratis inngang. Med Celestial Scourge, Tyranny, Cashgrab og Arachno. Info: https://www.facebook.com/profile.php?id=61597088812839
+- (fylles inn av build.js fra events.json)
 
 ## Merch
 - T-shirt - Red: 350 kr
@@ -29,4 +29,4 @@
 - Ikke forveksle med andre band som heter Tyranny (f.eks. det finske funeral doom-bandet).
 
 ## In English
-Tyranny is a Norwegian black metal band from Larvik, Norway (formed 2024). Winners of Imagine Norway, played Midgardsblot 2026. Next show: Krøss på halsen Vol. 4, Rockeklubben, Porsgrunn, 5 Dec 2026 (all ages, free entry). Official merch ships from Norway.
+Tyranny is a Norwegian black metal band from Larvik, Norway (formed 2024). Winners of Imagine Norway, played Midgardsblot 2026. @@NEXT_SHOW_EN@@ Official merch ships from Norway.

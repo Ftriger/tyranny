@@ -77,6 +77,9 @@ main{padding-block:28px 80px}
 .pill.off{border-color:var(--mute);color:var(--mute)}
 @media (max-width:700px){.prow{grid-template-columns:56px 1fr auto}.prow .acts{grid-column:1/-1;justify-content:flex-start}.prow .thumb{width:56px;height:70px}}
 
+.prow.erow{grid-template-columns:64px 1fr auto}
+@media (max-width:700px){.prow.erow{grid-template-columns:56px 1fr}}
+
 /* Redigering */
 .editor{scroll-margin-top:80px;background:var(--panel);border:1px solid var(--red);padding:20px;display:grid;gap:16px;margin-bottom:20px}
 .sizes{display:flex;flex-wrap:wrap;gap:8px}
@@ -142,6 +145,7 @@ main{padding-block:28px 80px}
       <a href="/" title="Til nettsiden"><img src="img/logo-600.png" alt="Tyranny"></a>
       <div class="tabs" role="tablist">
         <button role="tab" id="tabP" aria-selected="true" type="button">Varer</button>
+        <button role="tab" id="tabE" aria-selected="false" type="button">Konserter</button>
         <button role="tab" id="tabO" aria-selected="false" type="button">Bestillinger <span class="badge-n" id="newCount" hidden></span></button>
         <button role="tab" id="tabU" aria-selected="false" type="button">Brukere</button>
         <button role="tab" id="tabM" aria-selected="false" type="button">Min konto</button>
@@ -191,7 +195,49 @@ main{padding-block:28px 80px}
       <div class="plist" id="plist"></div>
     </section>
 
-    <!-- BRUKERE -->
+    <!-- KONSERTER -->
+    <section id="panelE" hidden>
+      <div class="bar">
+        <div><h2>Konserter</h2><span class="label" id="ecount"></span></div>
+        <button class="btn" id="newE" type="button">+ Ny konsert</button>
+      </div>
+      <p class="label" style="text-transform:none;letter-spacing:0;font-size:13px;margin:-6px 0 16px">Nettsiden velger selv nærmeste kommende konsert til toppen og nedtellingen, og flytter gamle konserter til «Tidligere konserter». Etter lagring vises endringen på nettsiden om ca. 1 minutt.</p>
+
+      <form class="editor" id="eEditor" hidden>
+        <h3 id="eHead">Ny konsert</h3>
+        <div class="row">
+          <div class="field" style="flex:2 1 260px"><label for="eTitle">Tittel</label><input id="eTitle" required maxlength="80" placeholder="Navn på arrangement eller festival"></div>
+          <div class="field"><label for="eDate">Dato</label><input id="eDate" type="date" required></div>
+          <div class="field"><label for="eTime">Klokkeslett (valgfritt)</label><input id="eTime" type="time"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="eVenue">Sted / scene</label><input id="eVenue" maxlength="80" placeholder="Rockeklubben"></div>
+          <div class="field"><label for="eCity">By</label><input id="eCity" maxlength="60" placeholder="Porsgrunn"></div>
+        </div>
+        <div class="field"><label for="eLineup">Andre artister (valgfritt, skilles med komma)</label><input id="eLineup" maxlength="200" placeholder="Band 1, Band 2"></div>
+        <div class="row">
+          <div class="field" style="flex:1 1 260px"><label for="eNote">Kort tekst (norsk)</label><input id="eNote" maxlength="200" placeholder="Fri alder og gratis inngang."></div>
+          <div class="field" style="flex:1 1 260px"><label for="eNoteEn">Kort tekst (engelsk, valgfritt)</label><input id="eNoteEn" maxlength="200" placeholder="All ages, free entry."></div>
+        </div>
+        <label class="check"><input type="checkbox" id="eFree"> Gratis inngang</label>
+        <div class="row">
+          <div class="field" style="flex:2 1 260px"><label for="eLink">Lenke (billetter, Facebook-arrangement …)</label><input id="eLink" type="url" maxlength="300" placeholder="https://"></div>
+          <div class="field"><label for="eLinkType">Knappen sier</label>
+            <select id="eLinkType"><option value="tickets">Billetter</option><option value="info">Mer info</option><option value="facebook">Se på Facebook</option></select></div>
+        </div>
+        <div class="field">
+          <label>Plakat (valgfritt)</label>
+          <div class="imgs" id="eImgs"></div>
+          <input type="file" id="eFile" accept="image/*" hidden>
+        </div>
+        <p class="err" id="eErr"></p>
+        <div class="row"><button class="btn" type="submit" id="eSave">Lagre konsert</button><button class="btn ghost" type="button" id="eCancel">Avbryt</button></div>
+      </form>
+
+      <div class="plist" id="elist"></div>
+    </section>
+
+    <!-- BESTILLINGER -->
     <section id="panelO" hidden>
       <div class="bar">
         <div><h2>Bestillinger</h2><span class="label" id="ocount"></span></div>
@@ -278,13 +324,13 @@ main{padding-block:28px 80px}
     $('whoName').textContent=ME.user+' · '+(ME.role==='admin'?'admin':'butikk');
     $('tabU').hidden = ME.role!=='admin';
     $('noStorage').hidden = STORAGE;
-    tab('P'); loadProducts(); loadOrders(true);
+    tab('P'); loadProducts(); loadEvents(); loadOrders(true);
   }
 
   // ---------- Faner ----------
-  function tab(k){ ['P','O','U','M'].forEach(function(x){ $('tab'+x).setAttribute('aria-selected',x===k); $('panel'+x).hidden = x!==k; });
-    if(k==='U') loadUsers(); if(k==='O') loadOrders(); }
-  $('tabP').onclick=function(){tab('P')}; $('tabO').onclick=function(){tab('O')}; $('tabU').onclick=function(){tab('U')}; $('tabM').onclick=function(){tab('M')};
+  function tab(k){ ['P','E','O','U','M'].forEach(function(x){ $('tab'+x).setAttribute('aria-selected',x===k); $('panel'+x).hidden = x!==k; });
+    if(k==='U') loadUsers(); if(k==='O') loadOrders(); if(k==='E') loadEvents(); }
+  $('tabP').onclick=function(){tab('P')}; $('tabE').onclick=function(){tab('E')}; $('tabO').onclick=function(){tab('O')}; $('tabU').onclick=function(){tab('U')}; $('tabM').onclick=function(){tab('M')};
 
   // ---------- Varer ----------
   function loadProducts(){ api('/api/admin/products').then(function(d){ products=d.products||[]; renderProducts(); }).catch(function(e){ toast(e.message); }); }
@@ -395,6 +441,88 @@ main{padding-block:28px 80px}
     if(editIdx>=0) products[editIdx]=p; else products.push(p);
     $('edSave').disabled=true;
     saveAll('Lagret – vises på nettsiden om ca. 1 minutt').then(function(){ $('editor').hidden=true; }).catch(function(err){ products=backup; $('edErr').textContent=err.message; }).finally(function(){ $('edSave').disabled=false; });
+  });
+
+  // ---------- Konserter ----------
+  var events=[], eIdx=-1, eImg='';
+  var MON=['jan','feb','mar','apr','mai','jun','jul','aug','sep','okt','nov','des'];
+  function p2(n){return (n<10?'0':'')+n}
+  function todayStr(){ var d=new Date(); return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate()); }
+  function fmtDate(s){ var p=String(s).split('-'); return (+p[2])+'. '+MON[+p[1]-1]+' '+p[0]; }
+  function loadEvents(){ api('/api/admin/events').then(function(d){ events=d.events||[]; renderEvents(); }).catch(function(e){ toast(e.message); }); }
+  function eOrder(){
+    var t=todayStr(), idx=events.map(function(_,i){return i});
+    var up=idx.filter(function(i){return events[i].date>=t}).sort(function(a,b){return events[a].date<events[b].date?-1:1});
+    var past=idx.filter(function(i){return events[i].date<t}).sort(function(a,b){return events[a].date<events[b].date?1:-1});
+    return up.concat(past);
+  }
+  function renderEvents(){
+    var t=todayStr();
+    $('ecount').textContent = events.length+' konserter · '+events.filter(function(e){return e.date>=t}).length+' kommende';
+    if(!events.length){ $('elist').innerHTML='<p class="label">Ingen konserter ennå. Trykk «Ny konsert».</p>'; return; }
+    $('elist').innerHTML = eOrder().map(function(i){
+      var e=events[i], up=e.date>=t;
+      var img = e.image ? '<img class="thumb" src="'+esc(src(e.image))+'" alt="">' : '<div class="thumb"></div>';
+      return '<div class="prow erow'+(up?'':' off')+'">'+img+
+        '<div><div class="name">'+esc(e.title)+'<span class="pill '+(up?'on':'off')+'">'+(up?'Kommer':'Spilt')+'</span>'+(e.free?'<span class="pill">Gratis</span>':'')+'</div>'+
+        '<div class="meta">'+esc(fmtDate(e.date)+(e.time?' kl. '+e.time:'')+(e.venue||e.city?' · '+[e.venue,e.city].filter(Boolean).join(', '):''))+'</div></div>'+
+        '<div class="acts"><button class="btn ghost small" type="button" data-eedit="'+i+'">Rediger</button>'+
+        '<span><button class="btn danger small" type="button" data-edel="'+i+'">Slett</button></span></div></div>';
+    }).join('');
+  }
+  function saveEvents(msg){
+    return api('/api/admin/events',{method:'POST',json:{events:events}})
+      .then(function(d){ events=d.events; renderEvents(); toast(msg||'Lagret'); })
+      .catch(function(e){ toast(e.message); loadEvents(); throw e; });
+  }
+  $('elist').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return; var d=b.dataset;
+    if(d.eedit){ openEvent(+d.eedit); }
+    else if(d.edel){ b.parentNode.innerHTML='<span class="confirm">Slette? <button class="btn danger small" type="button" data-edelyes="'+d.edel+'">Ja</button><button class="btn ghost small" type="button" data-edelno="1">Nei</button></span>'; }
+    else if(d.edelyes){ events.splice(+d.edelyes,1); saveEvents('Konsert slettet'); }
+    else if(d.edelno){ renderEvents(); }
+  });
+  function openEvent(i){
+    eIdx=i; var e = i>=0 ? events[i] : {title:'',date:'',time:'',venue:'',city:'',lineup:'',note:'',noteEn:'',free:false,link:'',linkType:'info',image:''};
+    $('eHead').textContent = i>=0 ? 'Rediger konsert' : 'Ny konsert';
+    $('eTitle').value=e.title; $('eDate').value=e.date; $('eTime').value=e.time||''; $('eVenue').value=e.venue||''; $('eCity').value=e.city||'';
+    $('eLineup').value=e.lineup||''; $('eNote').value=e.note||''; $('eNoteEn').value=e.noteEn||''; $('eFree').checked=!!e.free;
+    $('eLink').value=e.link||''; $('eLinkType').value=e.linkType||'info'; eImg=e.image||''; renderEImg(); $('eErr').textContent='';
+    $('eEditor').hidden=false; $('eTitle').focus(); $('eEditor').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  $('newE').onclick=function(){ openEvent(-1); };
+  $('eCancel').onclick=function(){ $('eEditor').hidden=true; };
+  function renderEImg(){
+    $('eImgs').innerHTML = eImg
+      ? '<figure><img src="'+esc(src(eImg))+'" alt="Plakat"><div class="ctrl"><button type="button" data-eix="1" aria-label="Fjern plakat">✕ Fjern</button></div></figure>'
+      : '<div class="drop" id="eDrop" role="button" tabindex="0">+ Last opp plakat<br><small>eller slipp den her</small></div>';
+  }
+  $('eImgs').addEventListener('click',function(e){
+    if(e.target.closest('#eDrop')){ $('eFile').click(); return; }
+    if(e.target.closest('[data-eix]')){ eImg=''; renderEImg(); }
+  });
+  $('eImgs').addEventListener('keydown',function(e){ if(e.target.id==='eDrop' && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); $('eFile').click(); } });
+  $('eImgs').addEventListener('dragover',function(e){ e.preventDefault(); });
+  $('eImgs').addEventListener('drop',function(e){ e.preventDefault(); eUpload(e.dataTransfer.files); });
+  $('eFile').addEventListener('change',function(){ eUpload(this.files); this.value=''; });
+  function eUpload(files){
+    var f=[].slice.call(files||[]).filter(function(x){return /^image\//.test(x.type)})[0]; if(!f) return;
+    $('eErr').textContent='Laster opp …';
+    shrink(f).then(function(data){ return api('/api/admin/upload',{method:'POST',json:{data:data}}); })
+      .then(function(d){ eImg=d.url; renderEImg(); $('eErr').textContent=''; })
+      .catch(function(e){ $('eErr').textContent=e.message; });
+  }
+  $('eEditor').addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var o = eIdx>=0 ? Object.assign({},events[eIdx]) : {id:''};
+    o.title=$('eTitle').value.trim(); o.date=$('eDate').value; o.time=$('eTime').value; o.venue=$('eVenue').value.trim(); o.city=$('eCity').value.trim();
+    o.lineup=$('eLineup').value.trim(); o.note=$('eNote').value.trim(); o.noteEn=$('eNoteEn').value.trim(); o.free=$('eFree').checked;
+    o.link=$('eLink').value.trim(); o.linkType=$('eLinkType').value; o.image=eImg;
+    if(!o.id) o.id = (o.title.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/æ/g,'ae').replace(/ø/g,'o').replace(/å/g,'a').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,30) || 'konsert')+'-'+o.date.slice(0,4);
+    var backup=events.slice();
+    if(eIdx>=0) events[eIdx]=o; else events.push(o);
+    $('eSave').disabled=true;
+    saveEvents('Lagret – vises på nettsiden om ca. 1 minutt').then(function(){ $('eEditor').hidden=true; }).catch(function(err){ events=backup; $('eErr').textContent=err.message; }).finally(function(){ $('eSave').disabled=false; });
   });
 
   // ---------- Bestillinger ----------

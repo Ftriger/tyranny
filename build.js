@@ -6,11 +6,15 @@ const path = require('path');
 const OUT = 'public';
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT);
-for (const f of ['admin.html', 'products.json']) fs.copyFileSync(f, path.join(OUT, f));
+for (const f of ['admin.html', 'products.json', 'events-render.js']) fs.copyFileSync(f, path.join(OUT, f));
 fs.cpSync('img', path.join(OUT, 'img'), { recursive: true });
 const SITE = (process.env.SITE_URL || 'https://tyranny-five.vercel.app').replace(/\/$/, '');
 const OLD = 'https://tyranny-five.vercel.app';
 const cat = JSON.parse(fs.readFileSync('products.json', 'utf8'));
+// Konserter: events.json (redigeres i admin → fanen «Konserter»). Samme kode som nettleseren bruker, så de alltid er enige.
+const TE = require('./events-render.js');
+const events = (JSON.parse(fs.readFileSync('events.json', 'utf8')).events || []).filter(TE.valid);
+const NOW = Date.now();
 const products = cat.products.filter((p) => p.active !== false);
 const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const kr = (n, en) => en ? n.toLocaleString('en-GB') + ' NOK' : n.toLocaleString('nb-NO') + ' kr';
@@ -50,10 +54,26 @@ html = html.replace(/<!--PRODUCTS-->[\s\S]*?<!--\/PRODUCTS-->/, `<!--PRODUCTS-->
 html = html.replace(/<script type="application\/ld\+json" id="ld-products">[\s\S]*?<\/script>/, `<script type="application/ld+json" id="ld-products">${JSON.stringify(ld)}</script>`);
 html = html.replace(/  var FALLBACK = .*;\n/, '  var FALLBACK = ' + JSON.stringify({ shipping: cat.shipping, products: cat.products }) + ';\n');
 if (SITE !== OLD) html = html.split(OLD).join(SITE);
+
+// Fyller inn konsertene (neste, plakat, tidligere, FAQ, JSON-LD, meta) for ett språk
+const put = (h, tag, v) => h.replace(new RegExp('<!--' + tag + '-->[\\s\\S]*?<!--/' + tag + '-->', 'g'), () => '<!--' + tag + '-->' + v + '<!--/' + tag + '-->');
+function fillEvents(h, lang) {
+  const R = TE.renderAll(events, lang, NOW, SITE);
+  for (const [tag, v] of [['NEXT', R.next], ['POSTER', R.poster], ['GIGMAIN', R.main], ['PAST', R.past], ['FAQ', R.faqHtml], ['MARQ', R.marq]]) h = put(h, tag, v);
+  h = h.replace(/(id="nextSlot"[^>]*data-sig=")[^"]*"/, (m, a) => a + esc(R.sig) + '"');
+  h = h.split('@@NEXT_META@@').join(esc(R.meta));
+  h = h.split('@@LD_FAQ@@').join(JSON.stringify(R.faqText).slice(1, -1));
+  h = h.split('@@LD_EVENTS@@').join(R.ld.length ? R.ld.map((o) => JSON.stringify(o)).join(',\n        ') + ',' : '');
+  h = h.split('@@NEXT_SHOW_EN@@').join(esc(R.enSentence));
+  h = h.replace('/*EVENTS*/[]', () => JSON.stringify(events).replace(/</g, '\\u003c'));
+  return h;
+}
+const base = html;
+html = fillEvents(base, 'no');
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
 
 // Engelsk versjon på /en/
-let en = html;
+let en = base;
 const missing = [];
 for (const [no, eng] of require('./i18n-en.js')) {
   const a = no.split('SITE').join(SITE), b = eng.split('SITE').join(SITE);
@@ -61,6 +81,7 @@ for (const [no, eng] of require('./i18n-en.js')) {
   en = en.split(a).join(b);
 }
 en = en.replace(/<!--PRODUCTS-->[\s\S]*?<!--\/PRODUCTS-->/, `<!--PRODUCTS-->${cardsFor(true)}<!--/PRODUCTS-->`);
+en = fillEvents(en, 'en');
 fs.mkdirSync(path.join(OUT, 'en'), { recursive: true });
 fs.writeFileSync(path.join(OUT, 'en', 'index.html'), en);
 if (missing.length) console.warn('Engelsk: fant ikke disse norske tekstene (oppdater i18n-en.js):\n - ' + missing.join('\n - '));
@@ -70,7 +91,7 @@ fs.writeFileSync(path.join(OUT, 'sitemap.xml'), `<?xml version="1.0" encoding="U
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url><loc>${SITE}/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="no" href="${SITE}/"/><xhtml:link rel="alternate" hreflang="en" href="${SITE}/en/"/>
-${products.flatMap((p) => p.images || []).concat(['img/live-midgardsblot-1.jpg', 'img/plakat-spetakkel.jpg', 'img/plakat-kross-pa-halsen.jpg']).map((u) => `    <image:image><image:loc>${esc(abs(u))}</image:loc></image:image>`).join('\n')}
+${[...new Set(products.flatMap((p) => p.images || []).concat(['img/live-midgardsblot-1.jpg', 'img/plakat-spetakkel.jpg']).concat(events.map((e) => e.image).filter(Boolean)))].map((u) => `    <image:image><image:loc>${esc(abs(u))}</image:loc></image:image>`).join('\n')}
   </url>
   <url><loc>${SITE}/en/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="no" href="${SITE}/"/><xhtml:link rel="alternate" hreflang="en" href="${SITE}/en/"/></url>
@@ -102,6 +123,8 @@ Sitemap: ${SITE}/sitemap.xml
 `);
 let llms = fs.readFileSync('llms.txt', 'utf8');
 llms = llms.replace(/## Merch[\s\S]*?(?=\n## )/, '## Merch\n' + products.map((p) => `- ${p.name}: ${kr(p.price)}${p.inStock === false ? ' (forhåndsbestilling)' : ''}`).join('\n') + `\n- Frakt i Norge: ${kr(cat.shipping.price)}, eller hent på konsert\n- Bestilling: ${SITE}/#merch\n`);
+llms = llms.replace(/## Neste konsert[\s\S]*?(?=\n## )/, '## Neste konsert\n' + TE.renderAll(events, 'no', NOW).llms + '\n');
+llms = llms.split('@@NEXT_SHOW_EN@@').join(TE.enSentence(TE.split(events, NOW).up[0]));
 if (SITE !== OLD) llms = llms.split(OLD).join(SITE);
 fs.writeFileSync(path.join(OUT, 'llms.txt'), llms);
 console.log('Bygget for', SITE, '–', products.length, 'varer');

@@ -1,0 +1,34 @@
+{
+  "events": [
+    {
+      "id": "kross-pa-halsen-vol4",
+      "title": "Krøss på halsen Vol. 4",
+      "date": "2026-12-05",
+      "time": "",
+      "venue": "Rockeklubben",
+      "city": "Porsgrunn",
+      "lineup": "Celestial Scourge, Cashgrab, Arachno",
+      "note": "Fri alder og gratis inngang.",
+      "noteEn": "All ages, free entry.",
+      "free": true,
+      "link": "https://www.facebook.com/profile.php?id=61597088812839",
+      "linkType": "facebook",
+      "image": "img/plakat-kross-pa-halsen.jpg"
+    },
+    {
+      "id": "spetakkel-2026",
+      "title": "Spetakkelfestivalen",
+      "date": "2026-11-14",
+      "time": "18:00",
+      "venue": "Jotron Arena",
+      "city": "Larvik",
+      "lineup": "Tsjuder, Jorn, Slagmaur, Fester, Ulvehunger",
+      "note": "Rock & metal på hjemmebane.",
+      "noteEn": "Rock & metal on home turf.",
+      "free": false,
+      "link": "https://spetakkelfestivalen.no/",
+      "linkType": "info",
+      "image": "img/plakat-spetakkel-hel.jpg"
+    }
+  ]
+}

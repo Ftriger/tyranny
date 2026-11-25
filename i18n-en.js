@@ -4,7 +4,7 @@ module.exports = [
   // ---- <head> ----
   ['<html lang="no">', '<html lang="en">'],
   ['<title>Tyranny – norsk black metal fra Larvik | Offisiell side og merch</title>', '<title>Tyranny – Norwegian black metal from Larvik, Norway | Official site & merch</title>'],
-  ['content="Tyranny er et norsk black metal-band fra Larvik. Vinnere av Imagine Norway, spilt Midgardsblot og Brussel. Se konserter – neste er Krøss på halsen Vol. 4 i Porsgrunn 5. desember 2026 – og kjøp offisiell merch."', 'content="Tyranny is a Norwegian black metal band from Larvik, Norway. Winners of Imagine Norway, played Midgardsblot and Brussels. See upcoming shows – next is Krøss på halsen Vol. 4 in Porsgrunn on 5 December 2026 – and buy official merch."'],
+  ['content="Tyranny er et norsk black metal-band fra Larvik. Vinnere av Imagine Norway, spilt Midgardsblot og Brussel. Se konserter@@NEXT_META@@ og kjøp offisiell merch."', 'content="Tyranny is a Norwegian black metal band from Larvik, Norway. Winners of Imagine Norway, played Midgardsblot and Brussels. See upcoming shows@@NEXT_META@@ and buy official merch."'],
   ['<link rel="canonical" href="SITE/">', '<link rel="canonical" href="SITE/en/">'],
   ['<meta property="og:url" content="SITE/">', '<meta property="og:url" content="SITE/en/">'],
   ['<meta property="og:locale" content="nb_NO">', '<meta property="og:locale" content="en_GB">\n<meta property="og:locale:alternate" content="nb_NO">'],
@@ -14,11 +14,9 @@ module.exports = [
   ['"inLanguage": "nb-NO"', '"inLanguage": "en"'],
   ['"description": "Norsk black metal-band fra Larvik, startet under Kulturnatta i september 2024. Vinnere av Imagine Norway og representerte Norge på Imagine Experience i Brussel."', '"description": "Norwegian black metal band from Larvik, formed at Kulturnatta in September 2024. Winners of Imagine Norway who represented Norway at Imagine Experience in Brussels."'],
   ['"award": ["Vinner av Imagine Norway"]', '"award": ["Winner of Imagine Norway"]'],
-  ['"name": "Tyranny på Krøss på halsen Vol. 4"', '"name": "Tyranny at Krøss på halsen Vol. 4"'],
-  ['"name": "Tyranny på Spetakkelfestivalen 2026"', '"name": "Tyranny at Spetakkelfestivalen 2026"'],
   ['"name": "Tyranny på Midgardsblot 2026 (Gildehallen)"', '"name": "Tyranny at Midgardsblot 2026 (Gildehallen)"'],
   ['"name": "Hvem er Tyranny?", "acceptedAnswer": { "@type": "Answer", "text": "Tyranny er et norsk black metal-band fra Larvik som startet under Kulturnatta i september 2024. Bandet vant Imagine Norway, spilte for Norge i Brussel og har spilt på Midgardsblot." }', '"name": "Who are Tyranny?", "acceptedAnswer": { "@type": "Answer", "text": "Tyranny is a Norwegian black metal band from Larvik, formed at Kulturnatta in September 2024. The band won Imagine Norway, represented Norway in Brussels and has played Midgardsblot." }'],
-  ['"name": "Når spiller Tyranny neste gang?", "acceptedAnswer": { "@type": "Answer", "text": "Neste konsert er Krøss på halsen Vol. 4 på Rockeklubben i Porsgrunn, lørdag 5. desember 2026. Fri alder og gratis inngang." }', '"name": "When is Tyranny\'s next show?", "acceptedAnswer": { "@type": "Answer", "text": "The next show is Krøss på halsen Vol. 4 at Rockeklubben in Porsgrunn, Norway on Saturday 5 December 2026. All ages, free entry." }'],
+  ['"name": "Når spiller Tyranny neste gang?"', '"name": "When is Tyranny\'s next show?"'],
   ['"name": "Hvor kan jeg kjøpe Tyranny-merch?", "acceptedAnswer": { "@type": "Answer", "text": "Offisiell merch – t-skjorter, langermet og patch – bestilles på denne nettsiden. Varene sendes fra Larvik, eller kan hentes på konsert." }', '"name": "Where can I buy Tyranny merch?", "acceptedAnswer": { "@type": "Answer", "text": "Official merch – t-shirts, longsleeves and patches – can be ordered on this website. Items ship from Larvik, Norway, or can be picked up at shows." }'],
   ['"name": "Hvordan booker jeg Tyranny?", "acceptedAnswer": { "@type": "Answer", "text": "Send e-post til dolk@online.no eller melding til @tyranny.official på Instagram." }', '"name": "How do I book Tyranny?", "acceptedAnswer": { "@type": "Answer", "text": "Email dolk@online.no or send a message to @tyranny.official on Instagram." }'],
 
@@ -33,23 +31,11 @@ module.exports = [
 
   // ---- Toppen ----
   ['IMAGINE NORWAY · VINNERE · LARVIK · NORGE · ', 'IMAGINE NORWAY · WINNERS · LARVIK · NORGE · '],
-  ['<span class="label">Neste konsert</span>', '<span class="label">Next show</span>'],
-  ['<span>DES 2026</span>', '<span>DEC 2026</span>'],
-  ['<h3>Krøss på halsen Vol. 4</h3>\n            <p>Rockeklubben i Porsgrunn · Fri alder, gratis inngang · med Celestial Scourge, Cashgrab, Arachno</p>', '<h3>Krøss på halsen Vol. 4</h3>\n            <p>Rockeklubben, Porsgrunn · All ages, free entry · with Celestial Scourge, Cashgrab, Arachno</p>'],
-  ['aria-label="Nedtelling til Krøss på halsen"', 'aria-label="Countdown to Krøss på halsen"'],
-  ['<span>DAGER</span>', '<span>DAYS</span>'],
-  ['<span>TIMER</span>', '<span>HRS</span>'],
-  ['<span>SEK</span>', '<span>SEC</span>'],
   ['target="_blank" rel="noopener">Følg på Facebook</a>\n          <a class="btn ghost" href="#merch">Se merch</a>', 'target="_blank" rel="noopener">Follow on Facebook</a>\n          <a class="btn ghost" href="#merch">Shop merch</a>'],
   ['<i>✠</i>Brussel<i>✠</i>', '<i>✠</i>Brussels<i>✠</i>'],
 
   // ---- Konserter ----
   ['<span class="eyebrow">Konserter</span>\n      <h2>Se oss <em>live</em></h2>', '<span class="eyebrow">Shows</span>\n      <h2>See us <em>live</em></h2>'],
-  ['alt="Plakat for Krøss på halsen Vol. 4 på Rockeklubben i Porsgrunn med Celestial Scourge, Tyranny, Cashgrab og Arachno"', 'alt="Poster for Krøss på halsen Vol. 4 at Rockeklubben in Porsgrunn with Celestial Scourge, Tyranny, Cashgrab and Arachno"'],
-  ['<span class="stamp">Neste</span>', '<span class="stamp">Next</span>'],
-  ['<span class="label">Lørdag 5. desember 2026</span>', '<span class="label">Saturday 5 December 2026</span>'],
-  ['<p>Rockeklubben i Porsgrunn. Fri alder og gratis inngang. Med Celestial Scourge, Cashgrab og Arachno – kom og bli med.</p>', '<p>Rockeklubben in Porsgrunn. All ages, free entry. With Celestial Scourge, Cashgrab and Arachno – come and join us.</p>'],
-  ['rel="noopener">Mer på Facebook</a></div>', 'rel="noopener">More on Facebook</a></div>'],
   ['aria-label="Tidligere konserter"', 'aria-label="Past shows"'],
   ['<span class="chip">Spilt</span>', '<span class="chip">Played</span>'],
   ['<span class="when">Mai 2026</span>', '<span class="when">May 2026</span>'],
@@ -79,11 +65,10 @@ module.exports = [
   ['alt="Tyranny: Birk, Nathaniel, Nathaniel og Adam. Foto: Diana Blajan"', 'alt="Tyranny: Birk, Nathaniel, Nathaniel and Adam. Photo: Diana Blajan"'],
   ['<span class="eyebrow">Bandet</span>\n        <h2>Fra Kongegata <em>til Brussel</em></h2>', '<span class="eyebrow">The band</span>\n        <h2>From Kongegata <em>to Brussels</em></h2>'],
   ['<p>Tyranny spiller rå, tung og uoppusset norsk black metal. Bandet startet som et prosjekt under Kulturnatta i Larvik i september 2024, og øver i Fabrikken i Kongegata 1.</p>', '<p>Tyranny plays raw, heavy and unpolished Norwegian black metal. The band started as a project at Kulturnatta in Larvik in September 2024 and rehearses at Fabrikken, Kongegata 1.</p>'],
-  ['<p>Siden har det gått fort: seier i Imagine Norway, konsert for Norge i Brussel, Gildehallen på Midgardsblot, Spetakkel i Jotron Arena – og nå Krøss på halsen i Porsgrunn.</p>', '<p>Things have moved fast since: winning Imagine Norway, playing for Norway in Brussels, Gildehallen at Midgardsblot, Spetakkel at Jotron Arena – and now Krøss på halsen in Porsgrunn.</p>'],
+  ['<p>Siden har det gått fort: seier i Imagine Norway, konsert for Norge i Brussel, Gildehallen på Midgardsblot og Spetakkel i Jotron Arena.</p>', '<p>Things have moved fast since: winning Imagine Norway, playing for Norway in Brussels, Gildehallen at Midgardsblot and Spetakkel at Jotron Arena.</p>'],
   ['<li><span>Sep 2024</span>Første konsert, Kulturnatta Larvik</li>', '<li><span>Sep 2024</span>First show, Kulturnatta Larvik</li>'],
   ['<li><span>Imagine Norway</span>Vinnere av den norske finalen</li>', '<li><span>Imagine Norway</span>Winners of the Norwegian final</li>'],
   ['<li><span>Brussel</span>Representerte Norge på Botanique</li>', '<li><span>Brussels</span>Represented Norway at Botanique</li>'],
-  ['<li><span>Des 2026</span>Krøss på halsen, Porsgrunn</li>', '<li><span>Dec 2026</span>Krøss på halsen, Porsgrunn</li>'],
   ['<dt>Hjemby</dt>', '<dt>Hometown</dt>'],
   ['<dt>Øver</dt>', '<dt>Rehearses</dt>'],
   ['<dt>Besetning</dt><dd>Birk (bass, vokal) · Nathaniel (gitar) · Nathaniel (gitar) · Adam (trommer)</dd>', '<dt>Line-up</dt><dd>Birk (bass, vocals) · Nathaniel (guitar) · Nathaniel (guitar) · Adam (drums)</dd>'],
@@ -92,11 +77,11 @@ module.exports = [
   // ---- FAQ ----
   ['<span class="eyebrow">Spørsmål og svar</span>\n      <h2>Kort <em>fortalt</em></h2>', '<span class="eyebrow">FAQ</span>\n      <h2>In <em>short</em></h2>'],
   ['<summary>Hvem er Tyranny?</summary><p>Tyranny er et norsk black metal-band fra Larvik som startet under Kulturnatta i september 2024. Bandet vant Imagine Norway, spilte for Norge i Brussel og har spilt på Midgardsblot.</p>', '<summary>Who are Tyranny?</summary><p>Tyranny is a Norwegian black metal band from Larvik, formed at Kulturnatta in September 2024. The band won Imagine Norway, represented Norway in Brussels and has played Midgardsblot.</p>'],
-  ['<summary>Når spiller Tyranny neste gang?</summary><p>Lørdag 5. desember 2026 på Krøss på halsen Vol. 4, Rockeklubben i Porsgrunn. Fri alder og gratis inngang. <a href="https://www.facebook.com/profile.php?id=61597088812839" target="_blank" rel="noopener">Følg oss på Facebook</a>.</p>', '<summary>When is the next show?</summary><p>Saturday 5 December 2026 at Krøss på halsen Vol. 4, Rockeklubben, Porsgrunn, Norway. All ages, free entry. <a href="https://www.facebook.com/profile.php?id=61597088812839" target="_blank" rel="noopener">Follow us on Facebook</a>.</p>'],
+  ['<summary>Når spiller Tyranny neste gang?</summary>', '<summary>When is the next show?</summary>'],
   ['<summary>Hvor kan jeg kjøpe merch?</summary><p>Her på siden. T-skjorter, langermet og patch sendes fra Larvik, eller du kan hente på konsert. Varer som er tomme kan forhåndsbestilles.</p>', '<summary>Where can I buy merch?</summary><p>Right here. T-shirts, longsleeves and patches ship from Larvik, Norway, or you can pick up at a show. Sold-out items can be pre-ordered.</p>'],
   ['<summary>Hvordan booker jeg bandet?</summary><p>Send e-post til dolk@online.no eller melding til <a href="https://www.instagram.com/tyranny.official/" target="_blank" rel="noopener">@tyranny.official</a> på Instagram.</p>', '<summary>How do I book the band?</summary><p>Email dolk@online.no or message <a href="https://www.instagram.com/tyranny.official/" target="_blank" rel="noopener">@tyranny.official</a> on Instagram.</p>'],
   ['<details lang="en"><summary>In English</summary>', '<details lang="no"><summary>På norsk</summary>'],
-  ['<p>Tyranny is a raw, uncompromising Norwegian black metal band from Larvik, Norway, formed in September 2024. Winners of Imagine Norway, they represented Norway at Imagine Experience in Brussels and played Gildehallen at Midgardsblot 2026. Next show: Krøss på halsen Vol. 4, Rockeklubben, Porsgrunn, 5 December 2026 (all ages, free entry). Official merch ships from Norway. Booking: dolk@online.no.</p>', '<p>Tyranny er et norsk black metal-band fra Larvik. Les mer <a href="/">på norsk</a>.</p>'],
+  ['<p>Tyranny is a raw, uncompromising Norwegian black metal band from Larvik, Norway, formed in September 2024. Winners of Imagine Norway, they represented Norway at Imagine Experience in Brussels and played Gildehallen at Midgardsblot 2026. @@NEXT_SHOW_EN@@ Official merch ships from Norway. Booking: dolk@online.no.</p>', '<p>Tyranny er et norsk black metal-band fra Larvik. Les mer <a href="/">på norsk</a>.</p>'],
 
   // ---- Booking / bunn ----
   ['<span class="eyebrow">Booking og kontakt</span>', '<span class="eyebrow">Booking & contact</span>'],
@@ -149,7 +134,6 @@ module.exports = [
   ["'Fikk ikke kontakt. Sjekk nettet og prøv igjen.'", "'Could not connect. Check your connection and try again.'"],
   ["btn.textContent='Send bestilling';", "btn.textContent='Place order';"],
   ["toast('Takk for bestillingen!');", "toast('Thanks for your order!');"],
-  ["'<div><b>LIVE</b><span>NÅ</span></div>'", "'<div><b>LIVE</b><span>NOW</span></div>'"],
 
   // ---- Bestilling fra utlandet ----
   ['<div><b>Bestilling fra utlandet?</b> <span>Vi sender over hele verden. Fyll ut skjemaet, så får du et pristilbud med frakt og toll på e-post.</span></div>\n        <button class="btn ghost" type="button" id="intlBtn">Bestilling fra utlandet</button>', '<div><b>Ordering from outside Norway?</b> <span>We ship worldwide. Fill in the form and we will email you a quote including shipping (and duties where needed).</span></div>\n        <button class="btn" type="button" id="intlBtn">International order</button>'],

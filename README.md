@@ -6,6 +6,8 @@ Nettside: https://tyranny-five.vercel.app · Admin: https://tyranny-five.vercel.
 - `index.html` – nettsiden
 - `admin.html` – admin-panel (innlogging, varer, brukere)
 - `products.json` – standardvarer (brukes til admin har lagret egne varer)
+- `events.json` – konserter (redigeres i admin → Konserter)
+- `events-render.js` – lager konsert-HTML/JSON-LD (delt mellom bygg og nettleser)
 - `api/` – serverfunksjoner (innlogging, varer, bilder, betaling)
 - `img/` – bilder
 
@@ -27,6 +29,17 @@ Hver lagring blir en commit i repoet, og nettsiden oppdateres etter ca. 1 minutt
 Brukerlisten lagres kryptert i `data/users.enc`. Bytter du `ADMIN_PASSWORD`, må brukerne legges inn på nytt.
 
 Roller: **Admin** kan styre brukere og varer. **Butikk** kan bare endre varer.
+
+## Konserter
+
+Konsertene styres fra admin → fanen **Konserter** (samme innlogging og GITHUB_TOKEN som varene). Legg inn tittel, dato, sted, evt. klokkeslett, lenke og plakat – resten skjer av seg selv:
+
+- Nærmeste kommende konsert vises øverst på siden med nedtelling, og i konsertseksjonen med plakat. Flere kommende konserter listes under.
+- Når datoen er passert (6 timer etter start) flyttes konserten til «Tidligere konserter», og siden viser «Nye datoer kommer» med lenker til Facebook og Instagram hvis ingenting er annonsert. Det skjer i nettleseren, så det krever ingen ny publisering.
+- Google-data (JSON-LD), FAQ, meta-beskrivelse, `llms.txt`, sitemap og den engelske siden oppdateres fra de samme dataene.
+- Uten klokkeslett teller nedtellingen mot kl. 20:00 den dagen.
+
+Dataene ligger i `events.json` (hver lagring i admin blir en commit, og Vercel publiserer på nytt). All logikk for tegning ligger i `events-render.js`, som brukes både av `build.js` og nettleseren.
 
 ## Lager
 - «På lager» av = hele varen selges som forhåndsbestilling.
